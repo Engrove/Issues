@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Engrove Audio Tools
+    url: https://engroveaudio.com/
+    about: Open the public Engrove Audio Tools application.
+  - name: Reporting guide and evidence policy
+    url: https://github.com/Engrove/Issues#engrove-audio-tools--public-data-reports
+    about: Read the repository scope, privacy rules, and source hierarchy before submitting.
