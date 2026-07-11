@@ -1,0 +1,137 @@
+name: Missing gear
+description: Submit a missing cartridge, tonearm, turntable, test record, or related audio item.
+title: "[Missing gear] "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form when an item is not present in Engrove Audio Tools at all.
+
+        Reports are public. Do not include personal information, credentials, private correspondence, or purchase records.
+
+        Manufacturer pages, manuals, official datasheets, and archived official pages are preferred. State the exact variant so different generations are not merged accidentally.
+
+  - type: dropdown
+    id: gear_type
+    attributes:
+      label: Gear type
+      description: What kind of item is missing?
+      options:
+        - Cartridge / Tonhuvud
+        - Tonearm / Tonarm
+        - Turntable
+        - Test record
+        - Headshell
+        - Alignment or null-point dataset
+        - Other related audio item
+    validations:
+      required: true
+
+  - type: input
+    id: brand
+    attributes:
+      label: Brand or manufacturer
+      placeholder: "Example: Ortofon, SME, Technics, Dynavector"
+    validations:
+      required: true
+
+  - type: input
+    id: model
+    attributes:
+      label: Model
+      placeholder: "Example: 2M Black, Series V, SL-1200GR2"
+    validations:
+      required: true
+
+  - type: input
+    id: variant
+    attributes:
+      label: Variant, version, or production revision
+      description: Add length, output level, stylus version, generation, market variant, or production date range if known.
+      placeholder: "Example: MkII, 9 inch, low output, 12 inch, Improved"
+    validations:
+      required: false
+
+  - type: textarea
+    id: source_urls
+    attributes:
+      label: Source URLs
+      description: Provide one URL per line. Include at least one source that clearly identifies the submitted model.
+      placeholder: |
+        https://manufacturer.example/product
+        https://manufacturer.example/manual.pdf
+    validations:
+      required: true
+
+  - type: dropdown
+    id: strongest_source_type
+    attributes:
+      label: Strongest source type
+      options:
+        - Manufacturer / official product page
+        - Manufacturer manual / service manual / datasheet
+        - Official distributor documentation
+        - Independent measurement with method stated
+        - Specialist publication
+        - Forum / community material
+        - Other or unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: known_specs
+    attributes:
+      label: Known specifications
+      description: Add only values supported by the cited sources. Leave unknown values blank.
+      placeholder: |
+        type:
+        mass_g:
+        effective_mass_g:
+        compliance_value:
+        compliance_frequency_hz:
+        tracking_force_min_g:
+        tracking_force_max_g:
+        tracking_force_recommended_g:
+        cartridge_weight_range_g:
+        mounting_distance_mm:
+        effective_length_mm:
+        overhang_mm:
+        offset_angle_deg:
+        stylus_type:
+        output_mv:
+        load_impedance_ohm:
+        load_capacitance_pf:
+      render: yaml
+    validations:
+      required: false
+
+  - type: textarea
+    id: identification_notes
+    attributes:
+      label: Identification and duplicate-risk notes
+      description: Explain how this model differs from similarly named products, revisions, OEM variants, or regional versions.
+      placeholder: "Describe aliases, generations, visual identifiers, date ranges, and possible duplicates."
+    validations:
+      required: false
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Screenshots or document excerpts
+      description: Drag screenshots or short relevant excerpts here. Do not upload entire copyrighted manuals unless redistribution is permitted.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: submitter_check
+    attributes:
+      label: Submission checks
+      options:
+        - label: I searched Engrove Audio Tools and this exact item or variant is not already present.
+          required: true
+        - label: I understand that this public report is reviewed before any dataset change is made.
+          required: true
+        - label: I have included the strongest source I could find and have not included sensitive information.
+          required: true
