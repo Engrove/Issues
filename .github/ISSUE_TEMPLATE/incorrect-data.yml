@@ -1,0 +1,148 @@
+name: Incorrect data
+description: Report a wrong value in an existing Engrove Audio Tools database item.
+title: "[Incorrect data] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form when an item already exists in Engrove Audio Tools, but one or more values appear to be wrong.
+
+        Reports are public. Do not include personal information, credentials, private correspondence, or purchase records.
+
+        Include the current value, the proposed correct value, the exact model or variant, and the strongest source available.
+
+  - type: dropdown
+    id: database
+    attributes:
+      label: Database or area
+      description: Where is the incorrect value shown?
+      options:
+        - Cartridges
+        - Tonearms
+        - Null points / alignment data
+        - Test records
+        - Turntables or related equipment
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: item_name
+    attributes:
+      label: Existing item name
+      description: Use the exact manufacturer and model shown in Engrove Audio Tools.
+      placeholder: "Example: Ortofon 2M Black or SME 3009 Series II Improved"
+    validations:
+      required: true
+
+  - type: input
+    id: item_id
+    attributes:
+      label: Engrove record ID or page URL
+      description: Add the record ID, database page URL, or the Engrove tool route where you found the value.
+      placeholder: "Example: cartridge:1234:ortofon-2m-black or https://engroveaudio.com/..."
+    validations:
+      required: false
+
+  - type: input
+    id: variant
+    attributes:
+      label: Variant, version, or production revision
+      description: State any relevant generation, length, output version, stylus revision, market variant, or date range.
+      placeholder: "Example: MkII, 12 inch, low output, Improved, 1978 revision"
+    validations:
+      required: false
+
+  - type: input
+    id: field_name
+    attributes:
+      label: Field name
+      description: Which field or displayed value appears to be wrong?
+      placeholder: "Example: compliance_10hz_cu, effective_mass_g, tracking_force_g"
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_value
+    attributes:
+      label: Current value in Engrove
+      description: Copy the value currently shown, including units and any source note.
+      placeholder: |
+        Field:
+        Current value:
+        Unit:
+        Source note shown by Engrove:
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: correct_value
+    attributes:
+      label: Proposed correct value
+      description: Enter the proposed value, unit, measurement frequency, and any conditions that affect interpretation.
+      placeholder: |
+        Field:
+        Proposed value:
+        Unit:
+        Frequency or test condition:
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: source_urls
+    attributes:
+      label: Source URLs
+      description: Provide one URL per line. Manufacturer pages, manuals, and official datasheets are preferred.
+      placeholder: |
+        https://manufacturer.example/product
+        https://manufacturer.example/manual.pdf
+    validations:
+      required: true
+
+  - type: dropdown
+    id: strongest_source_type
+    attributes:
+      label: Strongest source type
+      options:
+        - Manufacturer / official product page
+        - Manufacturer manual / service manual / datasheet
+        - Official distributor documentation
+        - Independent measurement with method stated
+        - Specialist publication
+        - Forum / community material
+        - Other or unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence_notes
+    attributes:
+      label: Evidence and conflict notes
+      description: Explain why the current value is wrong, how the source identifies the exact variant, and whether other sources disagree.
+      placeholder: "Describe the evidence, variant match, uncertainty, and conflicting values."
+    validations:
+      required: true
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Screenshots or document excerpts
+      description: Drag screenshots or short relevant excerpts here. Do not upload entire copyrighted manuals unless redistribution is permitted.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: submitter_check
+    attributes:
+      label: Submission checks
+      options:
+        - label: I understand that this public report is reviewed before any dataset change is made.
+          required: true
+        - label: I have identified the exact model or variant as accurately as possible.
+          required: true
+        - label: I have included the strongest source I could find and have not included sensitive information.
+          required: true
