@@ -1,0 +1,95 @@
+{
+  "schema": "engrove.measurement-signals.manifest.v1",
+  "release": "0.1.0",
+  "status": "prototype-not-metrologically-validated",
+  "format": {
+    "container": "WAV",
+    "encoding": "PCM signed 16-bit LE",
+    "sample_rate_hz": 48000,
+    "channels": 2,
+    "measurement_peak_dbfs": -12,
+    "header_peak_dbfs": -18
+  },
+  "assets": [
+    {
+      "file": "ENGROVE-ROOM-DECAY-L-v0.1.0.wav",
+      "test_id": 1,
+      "application": "Room Decay / Response",
+      "duration_s": 30.86,
+      "size_bytes": 5925164,
+      "sha256": "eb2db5eacc7cec80785ff6c9d4bfa08d3529ac231bf76024f5e057fb0829cc0a",
+      "payload": "12s logarithmic sweep 20Hz→20kHz on L; 12s decay window",
+      "acoustic_header": {
+        "magic": "E7",
+        "test_id": 1,
+        "version_code": "01",
+        "crc8": "CA",
+        "encoding": "BFSK 1200Hz=0 / 2200Hz=1, 80ms/bit, MSB first"
+      }
+    },
+    {
+      "file": "ENGROVE-ROOM-DECAY-R-v0.1.0.wav",
+      "test_id": 2,
+      "application": "Room Decay / Response",
+      "duration_s": 30.86,
+      "size_bytes": 5925164,
+      "sha256": "18db6328eaad97e130cc5f0a8d3369892ca43f42fccb2cc78fbc625467af06f0",
+      "payload": "12s logarithmic sweep 20Hz→20kHz on R; 12s decay window",
+      "acoustic_header": {
+        "magic": "E7",
+        "test_id": 2,
+        "version_code": "01",
+        "crc8": "F5",
+        "encoding": "BFSK 1200Hz=0 / 2200Hz=1, 80ms/bit, MSB first"
+      }
+    },
+    {
+      "file": "ENGROVE-BASS-MAP-v0.1.0.wav",
+      "test_id": 3,
+      "application": "Bass Map",
+      "duration_s": 31.86,
+      "size_bytes": 6117164,
+      "sha256": "743a05a2b5fd5b84df2d90f8677a737486fd6acbe61caa36812ee034b4fab106",
+      "payload": "20s logarithmic sweep 20Hz→250Hz, stereo in phase; 5s tail",
+      "acoustic_header": {
+        "magic": "E7",
+        "test_id": 3,
+        "version_code": "01",
+        "crc8": "E0",
+        "encoding": "BFSK 1200Hz=0 / 2200Hz=1, 80ms/bit, MSB first"
+      }
+    },
+    {
+      "file": "ENGROVE-STEREO-INTEGRITY-v0.1.0.wav",
+      "test_id": 4,
+      "application": "Stereo Integrity",
+      "duration_s": 20.86,
+      "size_bytes": 4005164,
+      "sha256": "79a55097bf6201e718481cb9099b8d3f39ffd510ba5d30e2c2c66145cdd442fc",
+      "payload": "2s chirps: L, R, L+R in phase, L+R with R inverted",
+      "acoustic_header": {
+        "magic": "E7",
+        "test_id": 4,
+        "version_code": "01",
+        "crc8": "8B",
+        "encoding": "BFSK 1200Hz=0 / 2200Hz=1, 80ms/bit, MSB first"
+      }
+    },
+    {
+      "file": "ENGROVE-ISOLATION-v0.1.0.wav",
+      "test_id": 5,
+      "application": "Isolation / Structure Coupling",
+      "duration_s": 49.86,
+      "size_bytes": 9573164,
+      "sha256": "9cec305b7ee4b6baa21f2b3513bd2507a69f5316b5dda9e83dce332aa53aedae",
+      "payload": "28s logarithmic sweep 20Hz→200Hz + stepped tones 25…200Hz",
+      "acoustic_header": {
+        "magic": "E7",
+        "test_id": 5,
+        "version_code": "01",
+        "crc8": "9E",
+        "encoding": "BFSK 1200Hz=0 / 2200Hz=1, 80ms/bit, MSB first"
+      }
+    }
+  ]
+}
