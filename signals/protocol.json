@@ -1,0 +1,82 @@
+{
+  "schema": "engrove.structure-coupling-protocol.v1",
+  "id": "ENGROVE-STRUCTURE-COUPLING-v1.0.0",
+  "filename": "ENGROVE-STRUCTURE-COUPLING-v1.0.0.wav",
+  "sha256": "4363c9117ba88cfc54087be833d03004901ea186991db821ca58e169238e1608",
+  "sampleRate": 48000,
+  "channels": 2,
+  "bitsPerSample": 16,
+  "durationSeconds": 55.86,
+  "evidence": "software-qualified-not-metrologically-validated",
+  "header": {
+    "magic": 231,
+    "testId": 6,
+    "version": 1,
+    "crcPolynomial": 7,
+    "zeroHz": 1200,
+    "oneHz": 2200,
+    "bitSeconds": 0.08,
+    "bitsStartSeconds": 2.8,
+    "endSeconds": 5.86,
+    "peakDbfs": -18
+  },
+  "stimulus": {
+    "kind": "deterministic-band-limited-pink-noise",
+    "lowHz": 20,
+    "highHz": 200,
+    "peakDbfs": -12,
+    "seed": 383396377,
+    "fftSize": 1048576,
+    "fadeSeconds": 0.25
+  },
+  "segments": [
+    {
+      "name": "background",
+      "startSeconds": 5.86,
+      "endSeconds": 15.86
+    },
+    {
+      "name": "excitation-1",
+      "startSeconds": 15.86,
+      "endSeconds": 27.86
+    },
+    {
+      "name": "quiet-between",
+      "startSeconds": 27.86,
+      "endSeconds": 35.86
+    },
+    {
+      "name": "excitation-2",
+      "startSeconds": 35.86,
+      "endSeconds": 47.86
+    },
+    {
+      "name": "recovery",
+      "startSeconds": 47.86,
+      "endSeconds": 55.86
+    }
+  ],
+  "analysisWindows": {
+    "background": [
+      7.86,
+      15.36
+    ],
+    "excitation1": [
+      17.86,
+      26.86
+    ],
+    "between": [
+      29.86,
+      35.36
+    ],
+    "excitation2": [
+      37.86,
+      46.86
+    ],
+    "recovery": [
+      49.86,
+      55.36
+    ]
+  },
+  "interpretation": "Same-device controlled structural response comparison. Not a pickup-path feedback-margin measurement. Sensor bandwidth, anti-alias filtering and absolute scale are not independently validated. Microphone levels are relative, not SPL."
+}

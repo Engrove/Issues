@@ -1,0 +1,24 @@
+# AI-CODING NOTE: Isolated additive signal publication. No application deployment,
+# main-branch mutation, release metadata update or existing-asset replacement.
+name: Publish structure coupling signal v1
+on:
+  push:
+    branches: [engroveaudio-structure-coupling-v1]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Independently verify stimulus
+        run: node signals/check-structure-coupling-signal.mjs --protocol signals/protocol.json
+      - name: Generate pinned assets
+        run: node signals/generate-structure-coupling.mjs --protocol signals/protocol.json --out signals/assets
+      - name: Publish missing assets and verify digests
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node signals/publish-release.mjs
