@@ -1,0 +1,16 @@
+name: Publish guided bass v1 assets
+on:
+  push:
+    branches: [audio/guided-bass-v1]
+permissions:
+  contents: write
+jobs:
+  publish:
+    if: github.repository == 'Engrove/Issues'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: node tools/generate-guided-bass-v1.mjs signals
+      - run: node tools/publish-guided-bass-v1.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
