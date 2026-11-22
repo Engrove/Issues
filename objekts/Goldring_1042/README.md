@@ -6,7 +6,7 @@ This folder contains a 3D reconstruction of the Goldring 1042 cartridge for tone
 |---|---|
 | [Goldring_1042_REV_D.step](Goldring_1042_REV_D.step) | Solid CAD assembly for importing into a mechanical design. Units: millimetres; Z up. |
 | [Goldring_1042_REV_D.glb](Goldring_1042_REV_D.glb) | Coloured version of the same model for a glTF/GLB-compatible 3D viewer. Units: metres; Y up. |
-| [goldring1042_behavior.pseudo](goldring1042_behavior.pseudo) | Version 1.1: language-neutral description of geometry, mechanics, groove contact, electrical behaviour and model limits. It is a specification, not executable simulation code. |
+| [goldring1042_behavior.pseudo](goldring1042_behavior.pseudo) | Version 1.2: language-neutral description of geometry, mechanics, groove contact, electrical behaviour and model limits. It is a specification, not executable simulation code. |
 
 ## Using the models
 
@@ -17,3 +17,5 @@ Use the model as a cartridge envelope and mounting reference when planning an as
 Read the pseudocode when defining physical behaviour for a future simulation. Measured observations, manufacturer values, assumptions and unknown parameters are distinguished. Mass distribution, damping and microscopic contact geometry are not fully identified. Its evidence references use permanent links to the supporting files, so no additional local files are required to read the specification.
 
 For force calculations, distinguish local wall friction (friction force divided by wall normal force) from effective groove drag (longitudinal drag divided by vertical tracking force). The numerical examples are conditional scenarios, not measured Goldring friction. Use the actual tonearm geometry to transfer bearing, cable and guide loads to the stylus; keep static compliance separate from frequency-dependent response.
+
+For electrical calculations, specify the velocity direction, voltage/velocity RMS or peak convention, total external capacitance and measurement port. The specification separates an ideal RLC loading response from the complete cartridge response and from phono-stage overload. Published test observations retain their individual setups; they do not calibrate your cartridge or establish a universal tracking threshold.

@@ -1,4 +1,4 @@
-SPECIFICATION Goldring1042_PhysicalBehaviour VERSION 1.1
+SPECIFICATION Goldring1042_PhysicalBehaviour VERSION 1.2
 DATE 2026-11-22
 PURPOSE "Component contract for CAD planning, model identification and future simulation."
 STATUS "Geometry audited; physical specimen not identified; no executable simulator."
@@ -8,15 +8,16 @@ STATUS "Geometry audited; physical specimen not identified; no executable simula
 // EQUATION states a physical/model relation, not an implemented numerical solver.
 // MODEL_CHOICE must name assumptions and its validity domain in every result.
 // A function declared here is a required interface, not an existing implementation.
-// References Mxx/Ixx/Oxx/C01/Dxx/Pxx/U01 resolve in sources.json and sources.md.
-// Analysis revision 2: gap review; REV D geometric files remain unchanged.
+// References Mxx/Ixx/Oxx/C01/Dxx/Pxx/Uxx resolve in sources.json and sources.md.
+// Analysis revision 3: reviewed text/HTML; REV D geometric files remain unchanged.
 
 // Shared package: evidence imports use permanent canonical-source links.
 // No extra local files are required; fetch the named data when consuming this contract.
-IMPORT evidence_register FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/644f193e239ad75b1c2149b05e7392024a6f3ba0/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/sources.json"
-IMPORT parameters FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/644f193e239ad75b1c2149b05e7392024a6f3ba0/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/physical_parameters.json"
-IMPORT historical_observations FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/644f193e239ad75b1c2149b05e7392024a6f3ba0/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/measurements.json"
-IMPORT CAD_audit FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/644f193e239ad75b1c2149b05e7392024a6f3ba0/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/geometry_audit.json"
+// Resolve relative paths in imported registers against their canonical URLs.
+IMPORT evidence_register FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/3d47b7d01aaa44de7248652505263b4a0b95b7c0/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/sources.json"
+IMPORT parameters FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/3d47b7d01aaa44de7248652505263b4a0b95b7c0/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/physical_parameters.json"
+IMPORT historical_observations FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/3d47b7d01aaa44de7248652505263b4a0b95b7c0/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/measurements.json"
+IMPORT CAD_audit FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/3d47b7d01aaa44de7248652505263b4a0b95b7c0/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/geometry_audit.json"
 
 TYPE EvidenceQuantity<T>:
     value: T OR UNKNOWN
@@ -39,6 +40,9 @@ RULES Evidence:
     Never average incompatible source profiles or unidentified specimens.
     Never treat source conflict as a statistical confidence interval.
     A report supplied for review is not a verified measurement dataset.
+    An HTML chart, SPICE calculation or review award is not a laboratory replication.
+    Source retrieval/update dates do not establish a hardware change date.
+    A newer-looking FAQ does not silently supersede a conflicting live FAQ.
     Generic material/stylus experiments are not Goldring specimen calibration.
     Do not assign numerical fitting weights to inaccessible hobby observations.
     Distinct lateral/vertical resonances alone do not prove a compliance ratio:
@@ -186,6 +190,9 @@ SOURCE_PROFILES:
                 before labelling a profile as specimen-calibrated
         RULE differences may be editorial, methodological or physical;
              a documented hardware revision change has not been established.
+        RULE do not label these profiles as confirmed pre/post-2026 hardware.
+        RULE changed sensitivity convention is a hypothesis, not a proven cause
+             of 5 versus 6.5 mV; legacy velocity direction remains UNKNOWN.
         RULE equivalent tip mass is a reduced-model parameter, not diamond mass.
         RULE do not add tip mass twice when partitioning total assembly mass.
 
@@ -483,6 +490,25 @@ STEREO_KINEMATICS ideal_convention:
     RULE mechanical misalignment and intrinsic generator crosstalk are distinct.
     RULE do not apply B_45 again if calibrated G already includes channel axes.
 
+SIGNAL_CONVENTION_CONTRACT:
+    every_stimulus = {quantity, frequency_or_timebase, waveform,
+                     axis_or_vector_basis, peak_RMS_or_peak_to_peak,
+                     record_identity_track_radius, uncertainty}
+    every_voltage = {port_or_internal_node, channel_and_polarity,
+                     open_circuit_or_loaded, load_and_source_impedance,
+                     amplitude_convention, bandwidth, calibration, uncertainty}
+    REQUIRE compatible conventions before comparing sensitivity or overload.
+    sinusoid_only: peak = sqrt(2)*RMS; peak_to_peak = 2*peak
+    arbitrary_waveform: peak = measured_crest_factor * RMS
+    ideal_45_45_pure_lateral:
+        wall_velocity_each = lateral_velocity / sqrt(2)
+        // Same amplitude convention on both sides; not a peak/RMS conversion.
+    RULE 6.5/5 == 1.3, not sqrt(2); numerical proximity is not provenance.
+    RULE unknown velocity direction or voltage convention stays UNKNOWN;
+         do not silently infer it from a familiar test-record convention.
+    RULE a loaded reference voltage already contains its reference transfer;
+         scale with compatible transfer ratios, not a second absolute H factor.
+
 MODEL_CHOICE ReciprocalSmallSignalGenerator:
     // Sign convention: i flows OUT of the generator into the external load.
     // G maps chosen mechanical coordinates directly to terminal polarities.
@@ -509,15 +535,58 @@ MODEL_CHOICE SingleChannelElectricalApproximation:
     Z_load(omega) = 1 / (1/R_load + j*omega*C_ext)
     H_electrical(omega) = Z_load / (Z_coil + Z_load)
     H_total = H_mechanical * G_velocity_conversion * H_electrical
+    domain = linear_lumped_channel_with_constant_R_L_and_external_parallel_RC
+    a = 1 + R_coil/R_load
+    b = L_coil*C_ext
+    c = L_coil/R_load + R_coil*C_ext
+    H_electrical(omega) == 1/(a - b*omega^2 + j*c*omega)
+    absolute_dB(f) = 20*log10(abs(H_electrical(2*PI*f))) // relative to source EMF
+    normalised_dB(f,f_ref) = absolute_dB(f) - absolute_dB(f_ref)
+    REQUIRE declare f_ref and whether bandwidth means -3.000 dB or half power.
+    half_power_attenuation_dB = 10*log10(2) // approximately 3.0103 dB
+    IF C_ext > 0 and 2*a*b > c*c:
+        electrical_peak_Hz = sqrt((2*a*b-c*c)/(2*b*b))/(2*PI)
+    ELSE:
+        electrical_peak_Hz = NONE // no positive-frequency local maximum
+    RULE report descending crossing relative to the named reference;
+         a coarse plotting grid is not an exact peak or crossing calculation.
+    RULE R_coil and R_load already dissipate power: this is not a lossless model.
     RULE self_capacitance_of_coil is separate and UNKNOWN, not silently zero
          in a claimed full-band accurate model.
     lossless_LC_reference_frequency = 1/(2*PI*sqrt(L_coil*C_ext))
     RULE LC reference is not guaranteed measured treble-peak frequency.
+    RULE total measured pickup response also includes mechanics, record and
+         generator behaviour; RLC alone cannot identify their separate causes.
+    RULE differing SPICE/plot peaks cannot determine eddy-current loss in dB
+         without identical circuit, normalisation and independently identified data.
+    RULE lowering R_load may reduce a peak and also attenuate useful treble;
+         it is not a universal correction or a replacement for measuring C_ext.
     RULE I02 reports approximate peaks at 16 kHz / 80 pF and 10 kHz / 380 pF;
          these constrain a historical combined response, not L alone.
     RULE RIAA playback equalisation and preamp overload belong downstream.
     RULE a test record may already encode frequency compensation;
          inspect its specification before de-embedding or applying RIAA.
+
+DOWNSTREAM_PHONO_HEADROOM_CONTRACT:
+    // A measurement/design contract, not a measured property of this cartridge.
+    v_input(t) = loaded_cartridge_terminal_voltage(t)
+    v_node_j(f) = H_input_to_node_j(f) * v_input(f) // small-signal prediction only
+    REQUIRE gain_and_overload_vs_frequency, node_rails, source_impedance,
+            load, clipping_or_distortion_criterion, amplitude_conventions
+    headroom_dB(f) = 20*log10(V_allowed(f)/V_demanded(f))
+    REQUIRE both voltages refer to the same node, waveform and convention.
+    single_sine_slew_demand = 2*PI*f*V_node_peak
+    arbitrary_waveform_slew_demand = max(abs(d(v_node)/dt))
+    RULE gain specified at 1 kHz is not constant gain across an RIAA stage.
+    RULE actual groove velocity already contains record modulation/pre-emphasis;
+         do not add a second +20 dB factor to that same physical velocity.
+    RULE output voltage and an internal pre-equalisation node are distinct;
+         identify topology/transfers before predicting internal clipping or slew.
+    RULE a universal 55..80 mV peak minimum is not established by nominal output.
+    RULE changing cartridge changes several variables; disappearance of audible
+         distortion does not uniquely prove preamp clipping, SID or damper failure.
+    identification = controlled_electrical_injection_with_known_source_impedance
+                     plus_separate_record_tracking_measurement
 
 NOISE_AND_INTERFERENCE:
     resistor_thermal_voltage_PSD = 4 * Boltzmann_constant * temperature_K * R
@@ -552,6 +621,11 @@ FREQUENCY_AND_TRACKING_OBSERVABLES:
             temperature, load and distortion_metric
     RULE I01 lateral 90 um and vertical 45 um at 300 Hz do not describe all audio.
     RULE manufacturer's 80 um lacks sufficient conditions for a universal limit.
+    RULE do not invent a numeric value such as 68 um from 'barely 70 um',
+         or assign 315 Hz to an unspecified test because another test uses it.
+    RULE measurements from different records/VTFs/criteria are not a population
+         distribution; weak tracking does not uniquely identify a hardened damper.
+    RULE a source's qualitative channel comparison is not an exact dB result.
     RULE no hardcoded pass/fail threshold based only on displacement amplitude.
 
 MODEL_CHOICE SimpleOneAxisResonanceScenario:
@@ -565,6 +639,14 @@ MODEL_CHOICE SimpleOneAxisResonanceScenario:
     RULE frequency-dependent compliance makes the resonance condition implicit.
     RULE actual LT modal frequencies come from its constrained mass/stiffness
          system; this scalar scenario is not the LT design acceptance criterion.
+    RULE 8..12 Hz is at most a declared planning heuristic, not a safety certificate
+         or proof that 10 Hz is optimal for this LT mechanism and record spectrum.
+    RULE a guessed arm mass cannot turn a reported 10 Hz peak into measured C.
+    RULE added headshell/counterweight mass must use its actual inertia projection.
+    same_stiffness_same_mode_scenario_only:
+        f_new/f_old = sqrt(m_old/m_new)
+        REQUIRE same_effective_coordinate, identified_stiffness_and_mode
+        RULE source tip-mass changes do not establish a measured HF resonance shift.
 
 OPERATING_STATE_MACHINE:
     STORAGE -> guard_removed_and_assembly_checked -> INSTALLED_UNVERIFIED
@@ -625,6 +707,8 @@ IDENTIFICATION_AND_ACCEPTANCE:
     do not force current specimen to match a 1993 sample
     quarantine O01 from healthy-transfer parameter estimation
     verify mono polarity, channel separation and grounding independently of CAD
+    record voltage/velocity conventions and external load independently
+    distinguish preamp overload and slew from stylus contact loss/tracing distortion
     verify passivity, dimensional consistency and energy balance
     document unidentifiable parameter combinations instead of inventing unique values
     promote a capability only when its required inputs and validation are available
