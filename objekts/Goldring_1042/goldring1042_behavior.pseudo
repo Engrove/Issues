@@ -1,4 +1,4 @@
-SPECIFICATION Goldring1042_PhysicalBehaviour VERSION 1.0
+SPECIFICATION Goldring1042_PhysicalBehaviour VERSION 1.1
 DATE 2026-11-22
 PURPOSE "Component contract for CAD planning, model identification and future simulation."
 STATUS "Geometry audited; physical specimen not identified; no executable simulator."
@@ -8,13 +8,15 @@ STATUS "Geometry audited; physical specimen not identified; no executable simula
 // EQUATION states a physical/model relation, not an implemented numerical solver.
 // MODEL_CHOICE must name assumptions and its validity domain in every result.
 // A function declared here is a required interface, not an existing implementation.
-// References Mxx/Ixx/Oxx/C01/D01 resolve through the permanent source links below.
-// Sharing copy: only source-reference locations differ from the workbench specification.
+// References Mxx/Ixx/Oxx/C01/Dxx/Pxx/U01 resolve in sources.json and sources.md.
+// Analysis revision 2: gap review; REV D geometric files remain unchanged.
 
-IMPORT evidence_register FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/980695086ed349739fc9ec5eb7e4dfcc1238a568/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/sources.json"
-IMPORT parameters FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/980695086ed349739fc9ec5eb7e4dfcc1238a568/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/physical_parameters.json"
-IMPORT historical_observations FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/980695086ed349739fc9ec5eb7e4dfcc1238a568/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/measurements.json"
-IMPORT CAD_audit FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/980695086ed349739fc9ec5eb7e4dfcc1238a568/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/geometry_audit.json"
+// Shared package: evidence imports use permanent canonical-source links.
+// No extra local files are required; fetch the named data when consuming this contract.
+IMPORT evidence_register FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/644f193e239ad75b1c2149b05e7392024a6f3ba0/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/sources.json"
+IMPORT parameters FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/644f193e239ad75b1c2149b05e7392024a6f3ba0/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/physical_parameters.json"
+IMPORT historical_observations FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/644f193e239ad75b1c2149b05e7392024a6f3ba0/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/measurements.json"
+IMPORT CAD_audit FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/644f193e239ad75b1c2149b05e7392024a6f3ba0/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/geometry_audit.json"
 
 TYPE EvidenceQuantity<T>:
     value: T OR UNKNOWN
@@ -36,6 +38,11 @@ RULES Evidence:
     I01 and I02 share author/laboratory lineage; never count as two replications.
     Never average incompatible source profiles or unidentified specimens.
     Never treat source conflict as a statistical confidence interval.
+    A report supplied for review is not a verified measurement dataset.
+    Generic material/stylus experiments are not Goldring specimen calibration.
+    Do not assign numerical fitting weights to inaccessible hobby observations.
+    Distinct lateral/vertical resonances alone do not prove a compliance ratio:
+        axis-specific effective mass, damping and test frequency also matter.
     Never infer damping, friction or centre of mass from a rendered surface.
     Never infer physical material identity from a CAD part name or render colour.
     A failed specimen is not a calibration sample for normal operation.
@@ -261,6 +268,32 @@ MODEL_CHOICE PassiveViscoelasticSuspension:
     RULE static_C_lateral and static_C_vertical do not identify Kj or tau_j.
     RULE a single 10 Hz scalar does not identify anisotropy, phase or damping.
 
+MODEL_CHOICE IncrementalTipCompliance:
+    // Use measured point compliance, at the same tip/datum and operating state.
+    // S_static is compliance; C0 in PassiveViscoelasticSuspension is damping.
+    delta_tip_C = S_static_C * delta_force_at_tip_C
+    S_static_C = [[UNKNOWN,UNKNOWN,UNKNOWN],
+                  [UNKNOWN,0.024,UNKNOWN],
+                  [UNKNOWN,UNKNOWN,0.016]] m/N     // diagonal NOMINAL scenarios
+    REQUIRE fitted or explicitly assumed cross_terms before matrix evaluation
+    REQUIRE identified preload, temperature, settling time and linear domain
+    RULE axial compliance S_xx is unknown; never substitute S_yy or S_zz.
+    RULE rotational modes require a generalized compliance with mixed units;
+         convert bearing torque to tip force through actual geometry first.
+    conditional_pure_lateral_static_example:
+        declared_assumptions = uncoupled_translation, nominal_static_compliance
+        transmitted_tip_force_y = 0.001 N
+        delta_tip_y = 0.024 m/N * transmitted_tip_force_y = 24e-6 m
+    harmonic_example:
+        delta_tip_hat = S_complex(omega) * force_hat
+        amplitude = abs(delta_tip_hat); phase = arg(delta_tip_hat)
+        scalar_C_10Hz_scenarios = [0.010,0.012,0.013] m/N
+        matched_1mN_amplitude_scenarios = [10,12,13] micrometre
+        REQUIRE assumed_axis_and_matching_amplitude_convention declared
+    RULE harmonic examples are not static bounds or measured lateral values.
+    RULE displacement alone does not determine tracking-angle error:
+         cantilever modal shape, effective length and rotations are required.
+
 EQUATIONS CoupledMechanics:
     // Preferred full assembly form includes body, arm links and moving stylus.
     M(Q)*Q_ddot + h(Q,Q_dot) + internal_restoring_and_loss(Q,Q_dot,z) =
@@ -316,9 +349,9 @@ CONTACT two_wall_groove:
     symmetric_static_example:
         N_L = N_R = VTF / sqrt(2)
         SUM_normal_magnitudes = sqrt(2) * VTF
-        Coulomb_tangential_drag = mu * sqrt(2) * VTF
-        REQUIRE identical_mu_and_symmetric_contact
-    RULE mu is UNKNOWN; the example is not a measured drag prediction.
+        Coulomb_tangential_drag = mu_wall * sqrt(2) * VTF
+        REQUIRE identical_mu_wall_and_symmetric_contact
+    RULE mu_wall is UNKNOWN; the example is not a measured drag prediction.
     RULE a blank disc and a two-wall groove have different force geometry.
     RULE loss of one wall is distinct from complete loss of contact.
     RULE no tensile normal reaction may hold the stylus inside a groove.
@@ -328,6 +361,35 @@ CONTACT two_wall_groove:
         REQUIRE real_tip_curvatures, real_wall_profile, material_response,
                 force_history, friction_and_wear_calibration
         OTHERWISE RETURN NOT_IDENTIFIED
+
+FRICTION_CONVENTIONS:
+    mu_wall[wall] = magnitude(sliding_friction_at_wall) / normal_force[wall]
+    mu_drag = measured_positive_longitudinal_drag / measured_VTF
+    REQUIRE denominator, direction, contact_geometry and operating_conditions
+            are explicit for every coefficient; otherwise REJECT conversion
+    symmetric_unmodulated_90deg_two_wall_case:
+        REQUIRE same_mu_wall, common_longitudinal_sliding, vertical_equilibrium
+        F_drag = mu_wall * sqrt(2) * VTF = mu_drag * VTF
+        mu_drag = sqrt(2) * mu_wall
+    RULE do not apply sqrt(2) again to an already effective mu_drag.
+    RULE general modulated/asymmetric contact uses resolved wall force vectors;
+         a measured effective drag coefficient does not identify both wall laws.
+    RULE mean mu_drag may include modulation and material losses;
+         keep the operational measurement separate from microscopic Coulomb law.
+    nominal_or_calibrated_Goldring_mu_wall = UNKNOWN
+    nominal_or_calibrated_Goldring_mu_drag = UNKNOWN
+    sensitivity_scenarios_from_review_U01_D02:
+        coefficient_interval = [0.20,0.55]       // assumed, NOT a confidence bound
+        VTF = 1.75 gram_force
+        IF interpreted_as_mu_drag: F_drag = [3.4323275,9.438900625] mN
+        IF interpreted_as_mu_wall: F_drag = [4.854044101,13.348621278] mN
+        RULE these are alternative definitions of the same input numbers,
+             not two measured friction ranges and not interchangeable bounds.
+    optional_friction_fluctuations:
+        REQUIRE measured_spectra_or_time_series, wall_correlation, bandwidth,
+                speed, radius, modulation, temperature and contamination
+        REQUIRE total_normal_force >= 0 and friction dissipates relative motion
+        RULE no default 1/f spectrum, stochastic amplitude or break-in duration.
 
 ARM_AND_RECORD_COUPLING:
     record_angle_dot = supplied_actual_omega(time)
@@ -344,6 +406,72 @@ ARM_AND_RECORD_COUPLING:
     RULE groove speed changes with radius even at constant rpm.
     RULE warp and eccentricity excite arm/suspension, not just the visual mesh.
     RULE do not resample away platter-speed or centering error being studied.
+
+LT_FORCE_TRANSMISSION:
+    s = independent_coordinates_of_actual_LT_linkage
+    J_tip = partial_derivative(tip_position_W, s)
+    Q_drag = transpose(J_tip) * F_drag_W
+    power_check = Q_drag DOT s_dot == F_drag_W DOT (J_tip * s_dot)
+    REQUIRE reference_frame_and_units for every Jacobian row and column
+    REQUIRE angular coordinates carry generalized torque, not force in newton
+    cable_or_mount_wrench -> actual_wrench_J_transpose -> generalized_load
+    solve_constrained_arm_balance_for_transmitted_tip_force()
+    transform_tip_force_W_to_C_before_applying_tip_compliance()
+    RULE zero horizontal tracking error does not imply Q_drag == 0.
+    RULE LT is not automatically a translating carriage; do not substitute one.
+    RULE longitudinal drag is not automatically collinear with a named arm axis.
+    RULE bearing resistance is not generally equal to lateral force at the tip.
+    RULE magnetic guide forces, cables and bearing friction remain separate
+         loads; conservative restoring forces are not all frictional losses.
+    MODEL_CHOICE identified_single_coordinate_bearing_friction:
+        IF s_dot == 0:
+            Q_bearing may take any value in [-Q_static_limit,+Q_static_limit]
+            select reaction from equilibrium; stick only if feasible
+        ELSE:
+            Q_bearing = -Q_kinetic(abs(s_dot),preload,T) * sign(s_dot)
+                        - b_bearing * s_dot
+        REQUIRE identified Q_static_limit >= 0, Q_kinetic >= 0, b_bearing >= 0
+        REQUIRE Q_bearing * s_dot <= 0
+        RULE zero velocity does not imply zero static friction.
+        RULE this separable scalar law is optional, not a calibrated LT model.
+        RULE do not count the same resistance both at bearing and tip ports.
+    eccentricity_scenario_D02:
+        y_command = e * sin(omega*t)
+        frequency = rpm/60
+        acceleration_amplitude = e * omega^2
+        inertial_force_amplitude = specified_tip_referred_mass * e * omega^2
+        REQUIRE constant_single_translation_mass_and_prescribed_tip_trajectory
+        e = 0.0002 m; specified_tip_referred_mass = 0.020 kg
+        at_33_1over3rpm: frequency=0.555555556 Hz; force_amplitude=48.738787166 uN
+        at_45rpm: frequency=0.75 Hz; force_amplitude=88.826439610 uN
+        RULE these are imposed-motion examples, not assembled LT predictions.
+        RULE no claim of negligible force without measured competing loads.
+        RULE include sub-Hz compliance/creep in a centering study;
+             a 3..25 Hz resonance sweep misses the once-per-revolution input.
+
+IDENTIFICATION_CONTRACT CoastdownDrag:
+    // Proposed experiment, not performed. P01 supports the differential method;
+    // the equations here are an explicit SI torque balance, not its unread image.
+    REQUIRE drive_disengaged, same_rotating_inertia, matched_speed_and_radius,
+            measured_VTF_at_record_height, temperature_and_surface_condition
+    beta_with = -d(omega_with_stylus)/dt
+    beta_without = -d(omega_without_stylus)/dt
+    delta_parasitic_torque = non_groove_loss_with - non_groove_loss_without
+    groove_torque = I_rotating * (beta_with - beta_without) - delta_parasitic_torque
+    F_drag = groove_torque / measured_radius
+    mu_drag = F_drag / measured_VTF
+    REQUIRE I_rotating, both_decelerations, radius and parasitic_correction
+            identified with covariance/uncertainty and compatible conditions
+    RULE setting unknown delta_parasitic_torque to zero is an explicit assumption,
+         not a measured groove-friction result; changed spindle load may matter.
+    RULE motor cogging, regeneration, residual idler/belt contact, speed control,
+         bearing losses and arm motion can bias the difference.
+    RULE use instantaneous/local deceleration versus speed, not stop-time alone.
+    RULE report negative/noise-dominated estimates with uncertainty; do not clamp
+         them into an apparently positive measured friction coefficient.
+    RULE a quiet groove characterises its own operating condition only;
+         repeat at named radii, speeds, VTFs, records and modulation conditions.
+    RULE infer mu_wall only under FRICTION_CONVENTIONS conversion prerequisites.
 
 STEREO_KINEMATICS ideal_convention:
     B_45 = [[1,1],[1,-1]] / sqrt(2)
@@ -485,6 +613,12 @@ IDENTIFICATION_AND_ACCEPTANCE:
     measure actual electrical R/L/complex impedance and complete external load
     measure mass, loaded datums, COM and inertia where requested physics needs them
     identify lateral and vertical complex compliance over relevant force/frequency range
+    prioritise measured groove drag and LT bearing/cable/guide loads together
+        with axis-dependent compliance; their actual ranking needs sensitivity data
+    distinguish static tip bias, sub-Hz centering response and 10 Hz dynamics
+    infer C from two added-mass resonances only under a declared common-mode,
+        constant-compliance and known-mass-projection approximation
+    REQUIRE damping_and_peak_definition before treating a response peak as eigenfrequency
     use independent holdout conditions, not the same observations used for fitting
     verify monotonic load-peak shift against I02 qualitatively, unless replicating its setup
     compare I01 numerical anchors only when stimulus conventions are resolved
