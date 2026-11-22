@@ -1,0 +1,499 @@
+SPECIFICATION Goldring1042_PhysicalBehaviour VERSION 1.0
+DATE 2026-11-22
+PURPOSE "Component contract for CAD planning, model identification and future simulation."
+STATUS "Geometry audited; physical specimen not identified; no executable simulator."
+
+// This is language-neutral pseudocode. REQUIRE rejects an unsupported operation.
+// UNKNOWN is epistemic absence, not zero, infinity, a default material or a random value.
+// EQUATION states a physical/model relation, not an implemented numerical solver.
+// MODEL_CHOICE must name assumptions and its validity domain in every result.
+// A function declared here is a required interface, not an existing implementation.
+// References Mxx/Ixx/Oxx/C01/D01 resolve through the permanent source links below.
+// Sharing copy: only source-reference locations differ from the workbench specification.
+
+IMPORT evidence_register FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/980695086ed349739fc9ec5eb7e4dfcc1238a568/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/sources.json"
+IMPORT parameters FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/980695086ed349739fc9ec5eb7e4dfcc1238a568/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/physical_parameters.json"
+IMPORT historical_observations FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/980695086ed349739fc9ec5eb7e4dfcc1238a568/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/measurements.json"
+IMPORT CAD_audit FROM "https://raw.githubusercontent.com/Engrove/turntable-workbench/980695086ed349739fc9ec5eb7e4dfcc1238a568/assets/cartridges/goldring-1042/analysis/REV_D_physical_model/geometry_audit.json"
+
+TYPE EvidenceQuantity<T>:
+    value: T OR UNKNOWN
+    unit: dimensionally_explicit_unit
+    status: MANUFACTURER_NOMINAL | INDEPENDENT_REPORT | CAD_EXACT
+            | ANALYTICALLY_DERIVED | SCENARIO | UNKNOWN
+    source_ids: set<string>
+    specimen_id: string OR UNKNOWN
+    conditions: {frequency, temperature, VTF, direction, amplitude_convention,
+                 record, load, instrument, calibration, age, mounting}
+    uncertainty: distribution_or_interval OR UNKNOWN
+    applicability: explicit_domain
+    correlation_group: string OR UNKNOWN
+
+RULES Evidence:
+    CAD_EXACT does not imply PHYSICALLY_MEASURED.
+    MANUFACTURER_NOMINAL does not imply ACTUAL_SPECIMEN_VALUE.
+    An independent report without uncertainty is not traceable calibration.
+    I01 and I02 share author/laboratory lineage; never count as two replications.
+    Never average incompatible source profiles or unidentified specimens.
+    Never treat source conflict as a statistical confidence interval.
+    Never infer damping, friction or centre of mass from a rendered surface.
+    Never infer physical material identity from a CAD part name or render colour.
+    A failed specimen is not a calibration sample for normal operation.
+    Every prediction retains input provenance and MODEL_CHOICE assumptions.
+
+UNITS:
+    internal = {metre, kilogram, second, newton, radian, volt, ampere, ohm, henry, farad}
+    CAD_mm_to_m = 0.001
+    gram_to_kg = 0.001
+    milligram_to_kg = 0.000001
+    gram_force_to_N = 0.00980665
+    mm_per_N_to_m_per_N = 0.001
+    micrometre_per_millinewton == millimetre_per_newton
+    pF_to_F = 1e-12
+    mH_to_H = 0.001
+    degree_to_radian = PI / 180
+    rpm_to_rad_s = 2 * PI / 60
+
+FRAMES:
+    C = right_handed_cartridge_frame
+        origin = nominal_CAD_stylus_apex
+        ex = toward_rear_terminals
+        ey = transverse_axis_defined_by_CAD
+        ez = upwards_from_nominal_record_plane
+    M = mounting_datum_frame
+        orientation = C.orientation
+        origin_in_C = [10.2, 0, 17.3] mm
+    W = inertial_world_frame
+    G = local_record_groove_frame
+        ex = local_groove_tangent
+        ey = local_lateral_direction
+        ez = local_record_normal
+        REQUIRE orientation is right_handed
+    R_WC = proper_rotation_matrix
+    r_WC = C_origin_in_W
+    T_WC(point_C) = r_WC + R_WC * point_C
+    p_M = p_C - [10.2, 0, 17.3] mm
+    glTF_point_m = [CAD_x, CAD_z, -CAD_y] * 0.001
+    REQUIRE determinant(R_WC) == +1 within numerical tolerance
+
+GEOMETRIC_DATUMS:
+    nominal_tip_C = [0, 0, 0] mm
+    mounting_hole_centres_C = [[10.2,-6.35,17.3], [10.2,+6.35,17.3]] mm
+    nominal_mount_plane_C = z=17.3 mm
+    mount_spacing = 12.7 mm                         // M01, M02
+    tip_to_hole_longitudinal = 10.2 mm              // M03
+    nominal_mount_to_tip_height = 17.3 mm           // M03; M01 also states 17 mm
+    datum_loading_condition = UNKNOWN
+    mount_through_hole_diameter_CAD = 2.8 mm        // C01 only
+    nominal_supplied_screws = M2.5 x 8 mm with nuts // M06
+    mounting_torque = UNKNOWN
+    terminal_diameter_nominal = 1.2 mm              // M08
+    real_tolerance_of_each_datum = UNKNOWN
+    real_loaded_tip_location = UNKNOWN
+
+GEOMETRY_SCOPE:
+    audited_visual_parts = 24
+    audited_solids = 40
+    CAD_bounds_mm = [[-3.1,-8.7,0], [25.2,8.7,17.3]]
+    CAD_flange_dimensions_mm = [17.6,17.4,2.4]
+    CAD_shell_to_nominal_plane_clearance_mm = 1.075072748
+    CAD_stylus_seam_nominal_gap_mm = 0.075
+    CAD_cantilever_visible_length_mm = 4.531794193
+    CAD_cantilever_outer_inner_diameter_mm = [0.30,0.20]
+    CAD_diamond_shape = CONICAL_VISUAL_PROXY
+    real_Gyger_S_surface = UNKNOWN
+    visual_overlap_pairs = 19
+    physical_mass = UNKNOWN                        // source nominal masses below
+    physical_COM = UNKNOWN
+    physical_inertia_tensor = UNKNOWN
+    detailed_part_geometry = CAD_audit.parts
+    RULE visual shells contain invented/omitted internal volumes.
+    RULE summed CAD volume and its centroid are not physical mass properties.
+    RULE tiny cone apex is not a physically valid contact-pressure surface.
+    RULE D42 visual seam is not a calibrated disassembly trajectory or latch.
+    RULE connector lugs, cables, screw heads, nuts and tool clearance require
+         additional assembly geometry; they are absent from this cartridge file.
+
+ASSEMBLY physical_topology:
+    FIXED_GROUP body:
+        mounting_flange -> headshell_via_two_screws_and_nuts
+        material_identity = glass_reinforced_Pocan_polyester          // M01
+        structural_density_modulus_loss_tensor = UNKNOWN
+        generator_shield = mu_metal_can                             // M01
+        pole_pieces = laminated_mu_metal                            // M01
+        coils = two_fixed_formerless_coils                          // M01
+        stated_turns_per_coil = 4000                                // M01
+        winding_wire_geometry_and_losses = UNKNOWN
+        four_rear_terminals -> two_electrical_output_ports
+        terminal_contact_resistance_and_strength = UNKNOWN
+    REMOVABLE_GROUP D42:
+        housing -> seats_in_body_with_locating_feature              // M01
+        seat_stiffness_damping_clearance = UNKNOWN
+        suspension = butyl_rubber_polymer                          // M01
+        moving_magnet = Alnico_V                                   // M01
+        tie_bar = gold_plated_nickel                                // M01
+        tie_bar_roles = [mechanical_constraint, electrical_charge_path]
+        cantilever = aluminium                                     // M01
+        stylus = nude_diamond_with_Gyger_S_cut                       // M01
+        actual_geometry_mass_distribution_magnetic_circuit = UNKNOWN
+    ON_REMOVE D42:
+        nominal_groove_to_generator_conversion = unavailable
+        body_coils_and_their_electrical_noise_remain
+        external_field_pickup_may_remain
+    RULE CAD brass sleeve / tie bar names are visual modelling hypotheses;
+         they do not override manufacturer's material description.
+
+SOURCE_PROFILES:
+    CURRENT_WEB_M01:
+        total_cartridge_mass_nominal = 0.0062 kg
+        total_mass_with_supplied_fixings_nominal = 0.0076 kg
+        coil_R_nominal = 820 ohm
+        coil_L_nominal = 0.470 H
+        effective_tip_mass_nominal = 3.5e-7 kg
+        sensitivity_nominal = 0.005 V at lateral_velocity=0.05 m/s
+        sensitivity_tolerance = +/-3 dB
+        nominal_VTF = 1.75 gram_force
+        external_C_recommendation = [125e-12,225e-12] F
+        nominal_external_C = 175e-12 F
+    LEGACY_SHEET_M02:
+        total_cartridge_mass_nominal = 0.0063 kg
+        total_mass_with_supplied_fixings_nominal = 0.0076 kg
+        coil_R_nominal = 660 ohm
+        coil_L_nominal = 0.570 H
+        effective_tip_mass_nominal = 4.5e-7 kg
+        sensitivity_nominal = 0.0065 V at 1000 Hz and velocity=0.05 m/s
+        sensitivity_tolerance = +/-1.5 dB
+        nominal_VTF = 1.7 gram_force
+        external_C_recommendation = [150e-12,200e-12] F
+    COMMON:
+        VTF_operating_range = [1.5,2.0] gram_force
+        external_R_recommendation = 47000 ohm
+        static_C_lateral_nominal = 0.024 m/N
+        static_C_vertical_nominal = 0.016 m/N
+        dynamic_C_10Hz_claims = [0.010..0.012 from M05, 0.013 from M04] m/N
+        dynamic_C_axis_phase_and_test_amplitude = UNKNOWN
+        nominal_VTA = 24 degree
+    USER_SPECIMEN:
+        selected_profile = UNIDENTIFIED
+        REQUIRE measured_mass_and_electrical_impedance_and_identity
+                before labelling a profile as specimen-calibrated
+        RULE differences may be editorial, methodological or physical;
+             a documented hardware revision change has not been established.
+        RULE equivalent tip mass is a reduced-model parameter, not diamond mass.
+        RULE do not add tip mass twice when partitioning total assembly mass.
+
+ANGLE_DEFINITIONS:
+    azimuth = roll_of_stylus_sensitive_axes_relative_to_local_groove
+    zenith_or_horizontal_tracking_error = yaw_relative_to_groove_tangent
+    VTA = angle_associated_with_effective_vertical_tracking_motion
+    SRA = rake_angle_of_actual_contact_edge_relative_to_record
+    cantilever_angle = visible_cantilever_axis_inclination
+    diamond_shank_angle = visible_diamond_body_orientation
+    RULE these six quantities are distinct.
+    RULE CAD cantilever 24 degrees does not establish real VTA or SRA.
+    RULE M07 describes an intentionally forward-inclined Gyger shank;
+         do not tilt the whole cartridge merely to make that shank vertical.
+
+PORTS:
+    mechanical_mount_port:
+        input = pose, twist, acceleration OR external_support_constraints
+        output = wrench_at_named_mount_datum
+        no_overconstraint = do_not_prescribe_pose_and_independent_net_force
+    groove_port:
+        input = two_wall_surfaces_in_W, record_material_state, record_motion
+        output = wall_reaction_forces, friction_forces, contact_state
+    lead_wire_port:
+        input = harness_pose_velocity_and_characterised_force_law
+        output = wrench_on_body, electrical_RLC_and_microphonic_effects
+    electrical_ports:
+        L = differential(L_plus_white, L_minus_blue)
+        R = differential(R_plus_red, R_minus_green)
+        ground_network = UNKNOWN
+        REQUIRE actual_pin_markings_or_continuity for physical wiring
+        RULE CAD spatial positions are not wiring certification.
+    environmental_ports:
+        input = gravity, temperature, humidity, external_magnetic_field,
+                airborne_or_structure_vibration, contamination, elapsed_time
+        output = state-dependent response OR explicit NOT_IDENTIFIED
+
+STATE:
+    rigid_body_pose_and_twist
+    moving_subsystem_generalized_coordinates q
+    moving_subsystem_generalized_velocities q_dot
+    viscoelastic_internal_states z_j
+    coil_currents i[2]
+    terminal_voltages v[2]
+    contact_status_per_wall
+    stylus_seated: TRUE | FALSE | UNKNOWN
+    protective_guard_status: ABSENT | FITTED | UNKNOWN
+    wear_and_damage_state
+    temperature_and_charge_states_if_modelled
+    parameter_profile_and_uncertainty
+
+MODEL_CHOICE LowFrequencyRelativeCoordinates:
+    q = [lateral_displacement_y, vertical_displacement_z] in metre
+    reference = explicitly_measured_equilibrium_at_specified_VTF_and_temperature
+    REQUIRE q=0 is not silently equated to unloaded CAD tip datum
+    extension = optional_fore_aft_and_rotational_bending_modes_with_declared_units
+    tip_C(q) = calibrated_reference_tip_C + B_tip * q + higher_order_kinematics(q)
+    tip_W = T_WC(tip_C(q))
+    tip_velocity_W = body_translation_velocity
+                     + body_omega CROSS (R_WC * tip_C(q))
+                     + R_WC * tip_jacobian(q) * q_dot
+    RULE effective moving mass and B_tip must use the same modal normalization.
+
+MODEL_CHOICE PassiveViscoelasticSuspension:
+    // One possible identification model, not known Goldring coefficients.
+    restoring_force = K0*q + SUM_j[Kj*(q-z_j)] + C0*q_dot
+                      + nonlinear_elastic_force(q,preload,T,age)
+                      + nonlinear_dissipative_force(q,q_dot,T,age)
+    z_j_dot = (q-z_j)/tau_j
+    REQUIRE K0 and Kj symmetric_positive_semidefinite
+    REQUIRE C0 symmetric_positive_semidefinite and tau_j > 0
+    REQUIRE nonlinear_loss_power >= 0 in validated_domain
+    REQUIRE coefficient_values identified; UNKNOWN is not zero
+    small_signal_dynamic_stiffness(omega) =
+        K0 + SUM_j[Kj*(j*omega*tau_j)/(1+j*omega*tau_j)] + j*omega*C0
+    compliance_matrix(omega) = inverse(small_signal_dynamic_stiffness(omega))
+    RULE inertial tip transfer is not the same as suspension compliance.
+    RULE published scalar compliance may use a different test convention;
+         measurement operator must match before fitting the model.
+    RULE static_C_lateral and static_C_vertical do not identify Kj or tau_j.
+    RULE a single 10 Hz scalar does not identify anisotropy, phase or damping.
+
+EQUATIONS CoupledMechanics:
+    // Preferred full assembly form includes body, arm links and moving stylus.
+    M(Q)*Q_ddot + h(Q,Q_dot) + internal_restoring_and_loss(Q,Q_dot,z) =
+        Q_gravity + Q_applied + J_mount_transpose*wrench_mount
+        + J_contact_transpose*contact_forces
+        + Q_electromagnetic + Q_wire
+    position_constraints(Q,time) = 0
+    velocity_constraints = constraint_J*Q_dot + explicit_time_derivative = 0
+    REQUIRE a consistent mass partition, units and reference frame for every term
+    REQUIRE supplied arm linkage geometry for Engrove LT
+    RULE do not substitute a fixed-pivot arm or generic offset angle for LT.
+    RULE enforce constraints using a suitable DAE/contact method, not animation.
+    RULE a prescribed-arm motion model predicts reactions, not free arm motion.
+
+    // Equivalent body wrench balance, if the moving subsystem is separate:
+    m_body * a_COM = F_mount + m_body*g + F_from_moving_system + F_wire + F_other
+    I_COM*omega_dot + omega CROSS (I_COM*omega) = total_torque_at_COM
+    wrench_at_M = shift_wrench(wrench_at_COM, COM_minus_M)
+    shift_wrench([F,tau], r) = [F, tau + r CROSS F]
+    REQUIRE m_body excludes explicitly modelled moving mass
+    REQUIRE I_COM and r_COM identified for quantitative rigid-body response
+
+STATIC_INITIALISATION:
+    assemble_arm_and_cartridge_in_gravity
+    apply_counterbalance_and_tracking_force_mechanism
+    solve_equilibrium_with_contact_and_suspension_preload
+    VTF_measured = upward_resultant_contact_force_projected_on_record_normal
+    REQUIRE desired_VTF matches computed_or_measured_equilibrium
+    RULE cartridge_weight alone is not tracking force.
+    RULE do not add a separate VTF force if arm gravity/bias already produces it.
+    RULE CAD 17.3 mm load condition is unknown.
+    conditional_example:
+        F_at_1_75gf = 0.0171616375 N
+        unloaded_linear_deflection = 0.016 m/N * F_at_1_75gf
+                                   = 0.0002745862 m
+        validity = linear_static_spring_and_known_unloaded_zero_only
+        prohibition = never_auto_subtract_from_17_3mm_height
+
+CONTACT two_wall_groove:
+    // Ideal symmetric 90-degree V-groove example. Actual surfaces may differ.
+    n_L_G = [0,+1,+1]/sqrt(2)
+    n_R_G = [0,-1,+1]/sqrt(2)
+    FOR wall IN [L,R]:
+        signed_gap[wall] >= 0
+        normal_force[wall] >= 0
+        signed_gap[wall] * normal_force[wall] = 0
+        contact_point = support_point(actual_tip_surface, actual_wall_surface)
+        tangential_relative_velocity = tip_velocity - wall_velocity
+                                      projected_into_wall_tangent_plane
+        friction_force = identified_friction_law(normal_force,
+                         tangential_relative_velocity,T,contamination,wear)
+        REQUIRE friction_force DOT tangential_relative_velocity <= 0
+    symmetric_static_example:
+        N_L = N_R = VTF / sqrt(2)
+        SUM_normal_magnitudes = sqrt(2) * VTF
+        Coulomb_tangential_drag = mu * sqrt(2) * VTF
+        REQUIRE identical_mu_and_symmetric_contact
+    RULE mu is UNKNOWN; the example is not a measured drag prediction.
+    RULE a blank disc and a two-wall groove have different force geometry.
+    RULE loss of one wall is distinct from complete loss of contact.
+    RULE no tensile normal reaction may hold the stylus inside a groove.
+    RULE local contact compliance and the cartridge suspension are separate.
+    RULE the visual cone cannot provide finite Gyger contact pressure.
+    contact_pressure_or_wear_request:
+        REQUIRE real_tip_curvatures, real_wall_profile, material_response,
+                force_history, friction_and_wear_calibration
+        OTHERWISE RETURN NOT_IDENTIFIED
+
+ARM_AND_RECORD_COUPLING:
+    record_angle_dot = supplied_actual_omega(time)
+    local_surface_speed = radius * record_angle_dot
+    local_modulation_wavelength = local_surface_speed / modulation_frequency
+    groove_surfaces = authored_spiral + encoded_modulation + measured_warp
+                      + measured_eccentricity + surface_defects
+    body_clearance = signed_distance(actual_body_geometry, moving_record_surface)
+    REQUIRE loaded_geometry_and_tolerances for real collision certification
+    stylus_drag_wrench = [F_drag, (tip_position-reference_point) CROSS F_drag]
+    LT_generalized_drag_force = actual_LT_contact_J_transpose * F_drag
+    RULE no universal inward skating torque or fixed antiskate fraction.
+    RULE wire stiffness, bearing friction and constraint geometry can bias LT.
+    RULE groove speed changes with radius even at constant rpm.
+    RULE warp and eccentricity excite arm/suspension, not just the visual mesh.
+    RULE do not resample away platter-speed or centering error being studied.
+
+STEREO_KINEMATICS ideal_convention:
+    B_45 = [[1,1],[1,-1]] / sqrt(2)
+    wall_signal_coordinates = B_45 * [lateral_y,vertical_z]
+    pure_lateral_motion -> equal_sign_channels
+    pure_vertical_motion -> opposite_sign_channels
+    REQUIRE physical_terminal_polarity_verified
+    azimuth_yaw_pitch_transform = measured_rotation_between_C_and_G
+    RULE mechanical misalignment and intrinsic generator crosstalk are distinct.
+    RULE do not apply B_45 again if calibrated G already includes channel axes.
+
+MODEL_CHOICE ReciprocalSmallSignalGenerator:
+    // Sign convention: i flows OUT of the generator into the external load.
+    // G maps chosen mechanical coordinates directly to terminal polarities.
+    open_circuit_emf e = G * q_dot
+    electromagnetic_force_on_moving_system = -transpose(G) * i
+    coil_equation: L * i_dot + R * i + v = e
+    external_parallel_RC_load: C_ext * v_dot + inverse(R_load) * v = i
+    REQUIRE compatible SI units: G in V*s/m = N/A for displacement coordinates
+    REQUIRE R and L physically admissible matrices, declared mutual coupling
+    REQUIRE G and electrical_parameters fitted for the same specimen/domain
+    mechanical_conversion_power = -q_dot DOT transpose(G)*i = -e DOT i
+    electrical_received_power = e DOT i
+    RULE conversion conserves power; resistive/mechanical losses dissipate it.
+    RULE magnetostriction, hysteresis, eddy-current and distributed winding
+         effects require added causal passive states or measured frequency model.
+    RULE manufacturer output sensitivity is not automatically intrinsic G;
+         loading, mechanical transfer and velocity conventions may be included.
+    RULE do not multiply by a measured complete transfer and then repeat its
+         mechanical/electrical loading factors a second time.
+
+MODEL_CHOICE SingleChannelElectricalApproximation:
+    Z_coil(omega) = R_coil + j*omega*L_coil
+    C_ext = C_arm_leads + C_interconnect + C_phono_input + external_stray_C
+    Z_load(omega) = 1 / (1/R_load + j*omega*C_ext)
+    H_electrical(omega) = Z_load / (Z_coil + Z_load)
+    H_total = H_mechanical * G_velocity_conversion * H_electrical
+    RULE self_capacitance_of_coil is separate and UNKNOWN, not silently zero
+         in a claimed full-band accurate model.
+    lossless_LC_reference_frequency = 1/(2*PI*sqrt(L_coil*C_ext))
+    RULE LC reference is not guaranteed measured treble-peak frequency.
+    RULE I02 reports approximate peaks at 16 kHz / 80 pF and 10 kHz / 380 pF;
+         these constrain a historical combined response, not L alone.
+    RULE RIAA playback equalisation and preamp overload belong downstream.
+    RULE a test record may already encode frequency compensation;
+         inspect its specification before de-embedding or applying RIAA.
+
+NOISE_AND_INTERFERENCE:
+    resistor_thermal_voltage_PSD = 4 * Boltzmann_constant * temperature_K * R
+    REQUIRE temperature_and_network_transfer for output noise integration
+    total_noise = filtered_resistor_noise + measured_magnetic_noise
+                  + mechanical_thermal_noise + groove_surface_noise
+                  + cable_microphonics + preamp_noise
+    REQUIRE correlation_cross_spectra where sources are not independent
+    external_B_field -> coil_emf_and_shield_response
+    relative_body_vibration -> cantilever_motion -> generated_voltage
+    static_charge -> measured_ground_path_and_discharge_behaviour
+    RULE shield effectiveness and ground topology are UNKNOWN quantitatively.
+
+OPTIONAL_HIGHER_ORDER_PHYSICS:
+    housing_flexure_and_mount_modes -> identified_structural_modal_model
+    magnetic_nonlinearity_and_saturation -> characterised_field_and_force_law
+    thermal_expansion_and_rubber_aging -> identified_temperature_time_dependence
+    aerodynamic_or_electrostatic_forces -> quantified_external_field_model
+    finite_contact_temperature_and_wear -> validated_tribological_model
+    RULE omission requires a scope statement or bounded sensitivity argument;
+         absence of data is not evidence that an effect is physically zero.
+
+FREQUENCY_AND_TRACKING_OBSERVABLES:
+    transfer_matrix H(f) = output_voltage_vector / declared_stimulus_vector
+    balance_dB = 20*log10(abs(H_LL/H_RR)) under matching channel excitation
+    separation_L_dB = 20*log10(abs(H_LL/H_RL)) for left_only_excitation
+    separation_R_dB = 20*log10(abs(H_RR/H_LR)) for right_only_excitation
+    RULE one separation magnitude cannot determine complex off-diagonal terms.
+    RULE nominal 25 dB and historical 22 dB are not interchangeable assertions.
+    tracking_limit = amplitude_at_predeclared_distortion_or_contact_loss_criterion
+    REQUIRE frequency, direction, peak_RMS_or_peak_to_peak, VTF, record,
+            temperature, load and distortion_metric
+    RULE I01 lateral 90 um and vertical 45 um at 300 Hz do not describe all audio.
+    RULE manufacturer's 80 um lacks sufficient conditions for a universal limit.
+    RULE no hardcoded pass/fail threshold based only on displacement amplitude.
+
+MODEL_CHOICE SimpleOneAxisResonanceScenario:
+    f_approx = 1/(2*PI*sqrt((arm_effective_mass+cartridge_mass+hardware_mass)
+                           * dynamic_compliance))
+    REQUIRE all mass terms in kg and compliance in m/N
+    REQUIRE a one-axis tip-referred lumped model with declared mass convention
+    scenarios_C_10Hz = [0.010,0.012,0.013] m/N
+    RULE these are source-conflict scenarios, not measured uncertainty bounds.
+    RULE do not substitute static 0.024 m/N for dynamic compliance.
+    RULE frequency-dependent compliance makes the resonance condition implicit.
+    RULE actual LT modal frequencies come from its constrained mass/stiffness
+         system; this scalar scenario is not the LT design acceptance criterion.
+
+OPERATING_STATE_MACHINE:
+    STORAGE -> guard_removed_and_assembly_checked -> INSTALLED_UNVERIFIED
+    ASSEMBLY_ABSENT -> require_D42_installation -> INSTALLED_UNVERIFIED
+    INSTALLED_UNVERIFIED -> seating_and_identity_verified -> RAISED
+    RAISED -> lowering_and_first_contact -> SETTLING
+    SETTLING -> equilibrium_and_two_wall_contact -> TRACKING
+    TRACKING -> one_normal_force_zero_with_opening_gap -> ONE_WALL_LOSS
+    ONE_WALL_LOSS -> both_gaps_open -> AIRBORNE
+    ONE_WALL_LOSS or AIRBORNE -> recontact -> IMPACT_AND_SETTLING
+    TRACKING -> measured_suspension_stop_reached -> BOTTOMED_OR_LIMITED
+    any_lowered_state -> body_record_intersection -> BODY_CONTACT
+    any_contact_state -> lift_command -> UNLOADING -> RAISED
+    any_state -> D42_removed -> ASSEMBLY_ABSENT
+    any_state -> damage_or_wear_evidence -> DEGRADED_OR_FAULTY
+    any_state -> terminal_open_short_or_ground_fault -> ELECTRICAL_FAULT
+    electrical_fault_state may coexist with mechanical tracking state
+    long_term_aging_and_contamination may change parameters in every state
+    REQUIRE thresholds and impact law identified before predicting transitions
+    REQUIRE protective_guard_status == ABSENT before tracking operation
+    RULE reporting a possible event is different from predicting its threshold.
+    RULE O01 supports a removable-assembly fault scenario, not an exact failure cause.
+
+FUTURE_SOLVER_CONTRACT step(inputs, state, requested_fidelity):
+    validate_units_frames_profile_and_provenance()
+    missing = required_unknowns(requested_fidelity, inputs, state)
+    IF missing not empty:
+        RETURN {status: NOT_IDENTIFIED, missing_parameters: missing,
+                available_lower_fidelity_modes: explicitly_listed_modes}
+    establish_consistent_initial_conditions_and_constraints()
+    determine_record_and_mount_kinematics_from_supplied_geometry()
+    solve_coupled_mechanical_electrical_contact_equations()
+    update_event_states_without_allowing_negative_normal_reactions()
+    check_energy_balance_passivity_and_numerical_convergence()
+    RETURN {
+        status: PREDICTION_WITH_DECLARED_SCOPE,
+        tip_pose, body_pose, mounting_wrench, contact_forces, contact_state,
+        suspension_deflection, output_voltage, channel_transfer_if_excited,
+        collision_margins_if_geometry_valid, model_validity_flags,
+        uncertainty_if_identified_else_UNKNOWN,
+        source_profile, specimen_id, assumptions, calibration_domain
+    }
+
+IDENTIFICATION_AND_ACCEPTANCE:
+    preserve all raw observations with specimen and instrument metadata
+    measure actual electrical R/L/complex impedance and complete external load
+    measure mass, loaded datums, COM and inertia where requested physics needs them
+    identify lateral and vertical complex compliance over relevant force/frequency range
+    use independent holdout conditions, not the same observations used for fitting
+    verify monotonic load-peak shift against I02 qualitatively, unless replicating its setup
+    compare I01 numerical anchors only when stimulus conventions are resolved
+    do not force current specimen to match a 1993 sample
+    quarantine O01 from healthy-transfer parameter estimation
+    verify mono polarity, channel separation and grounding independently of CAD
+    verify passivity, dimensional consistency and energy balance
+    document unidentifiable parameter combinations instead of inventing unique values
+    promote a capability only when its required inputs and validation are available
+    never report PERFECT_DIGITAL_TWIN from sparse specifications and photographs
+
+END SPECIFICATION
