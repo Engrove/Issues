@@ -1,4 +1,4 @@
-GOLDRING 1042 REV F — EXTERNAL RECONSTRUCTION CONTRACT
+GOLDRING 1042 REV G — EXTERNAL RECONSTRUCTION CONTRACT
 Units mm; right-handed X aft towards terminals, Y transverse (L channel and G1042 print at -Y), Z up.
 Stylus apex = (0,0,0). Mount centre = (10.2,0,17.3).
 Mount hole centres = (10.2,-6.35,17.3) and (10.2,+6.35,17.3).
@@ -14,6 +14,8 @@ Unknown: specimen contour, tolerances, internals, mass distribution, inertia.
 Do not apply homogeneous material density to the BRep solids to predict mass.
 Diamond, cantilever, tie plate and magnet tube are visible proxies only.
 
+REV G = REV F with corrected stylus region; all other parts unchanged.
+
 CONSTRUCTION RULE (supersedes REV E): housing surfaces are planes, circular arcs and
 straight extrusions of line/arc profiles only. No multi-section spline loft.
 REV E's lofted degree-8 faces were measured wavy (mean curvature changes sign 5-6
@@ -25,9 +27,11 @@ BUILD:
    plan corner R 0.7. Recess X 12.3..15.8, Y -2.86..3.42,
    depth 0.22, raised text MADE IN / ENGLAND (reads along -Y, up = +X).
 3. Side profile (XZ, extruded across Y): front plane 46.0 deg meeting flange underside at
-   X 6.6; nose arc tangent to front plane and to bottom Z 1.2, front-most
-   X -2.6; bottom rises from X 14.6 to rear-bottom [19.15, 2.3];
-   rear wall from there to flange rear edge X 17.95.
+   X 6.6; flat bottom Z 1.1 from the cantilever exit; underside lip rising
+   forward from X 1.9 at 8.0 deg; nose arc tangent to the front plane and to the lip,
+   front-most X -2.6 (solved R about 2.5, centre about (-0.1, 3.9)); bottom rises from
+   X 14.6 to rear-bottom [19.15, 2.3]; rear wall to flange rear edge X 17.95.
+   Nose front corners rounded in plan view, R 2.0 tangent to front and side.
 4. Cross-section (YZ, extruded along X): half-width 6.6 at Z 3.2-4.6, bottom corners
    R 2.0, crease (+-6.3, 8.3), roof half-width 4.0 under flange.
 5. Housing = side prism AND section prism. Rear terminal block: half-width 6.25,
@@ -43,20 +47,28 @@ BUILD:
    raised 0.15. Gold ring R 2.07/2.75 centred at Z 10.66;
    'Goldring' width 7.17 centred at Z 7.27. Side print 'G1042' only on -Y,
    X [0.65, 6.35], cap height 1.3, centre Z 3.85.
-10. Validate every solid; export and re-import STEP; recover hole cylinders; check apex Z=0 and
-    mount plane Z=17.3; list housing surface classes (no B-spline loft allowed).
-11. Render only the exact B-rep triangulation. Do not substitute a separate mesh.
+10. Stylus proxies: diamond apex (0,0,0), vertical cone length 0.37. Cantilever axis
+    21.0 deg through (0,0,0.4); crimped flat front end at X -0.25
+    (0.5 x 0.36 x 0.16); tube r 0.15 tapering to r 0.26 between
+    X 0.9 and 3.2; ends at X 4.9 inside a square gold magnet tube
+    1.2 (wall 0.12), X 4.6..8.0. VTA 24.0 deg is the
+    tip-to-effective-pivot line, not the tube axis; implied pivot on the axis about
+    [6.52, 0.0, 2.9] (derived, unverified). Clearance bore r 0.42 inside the slot.
+11. Validate every solid; export and re-import STEP; recover hole cylinders; check apex Z=0 and
+    mount plane Z=17.3; list housing surface classes (no B-spline loft allowed); require zero
+    cantilever/housing overlap.
+12. Render only the exact B-rep triangulation. Do not substitute a separate mesh.
 
-ACTIVE_REV_F_GEOMETRY: {"parts": 21, "solids": 34, "bounds_mm": {"xmin": -2.6002, "xmax": 22.9761, "ymin": -8.8751, "ymax": 8.8751, "zmin": -0.0, "zmax": 17.3008}}
+ACTIVE_REV_G_GEOMETRY: {"parts": 21, "solids": 34, "bounds_mm": {"xmin": -2.6003, "xmax": 22.9761, "ymin": -8.8751, "ymax": 8.8751, "zmin": -0.0, "zmax": 17.3008}}
 
 No physical cartridge performance or Alien LT motion law is altered by this geometric revision.
 
 BEGIN ARCHIVED_NAMESPACE HISTORIC_D_PHYSICS_V1_2
 This preserves the previous behaviour specification verbatim. Its CAD_audit,
 GEOMETRY_SCOPE, 24-part/40-solid counts and C01 geometry describe REV D only.
-Do not transfer those geometry audit values to REV E or REV F. Physical equations and
+Do not transfer those geometry audit values to REV E, REV F or REV G. Physical equations and
 evidence limits remain reusable under their original conditions. The active
-REV F geometry contract above takes precedence for current CAD geometry.
+REV G geometry contract above takes precedence for current CAD geometry.
 Frozen source: Engrove/Issues commit 8f126c42fede611e2e0f021502286e76061c92ce,
 objekts/Goldring_1042/goldring1042_behavior.pseudo.
 
