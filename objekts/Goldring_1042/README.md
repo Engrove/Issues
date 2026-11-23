@@ -1,21 +1,24 @@
-# Goldring 1042 — REV D
+# Goldring 1042 — REV E
 
-This folder contains a 3D reconstruction of the Goldring 1042 cartridge for tonearm and headshell layout, together with a physical-behaviour specification.
+External photo-based reconstruction for nominal mounting and visual review.
+It is not factory CAD or a measured copy of a particular cartridge.
 
 | File | Contents and use |
-|---|---|
-| [Goldring_1042_REV_D.step](Goldring_1042_REV_D.step) | Solid CAD assembly for importing into a mechanical design. Units: millimetres; Z up. |
-| [Goldring_1042_REV_D.glb](Goldring_1042_REV_D.glb) | Coloured version of the same model for a glTF/GLB-compatible 3D viewer. Units: metres; Y up. |
-| [goldring1042_behavior.pseudo](goldring1042_behavior.pseudo) | Version 1.2: language-neutral description of geometry, mechanics, groove contact, electrical behaviour and model limits. It is a specification, not executable simulation code. |
+| --- | --- |
+| [Goldring_1042_REV_E.step](Goldring_1042_REV_E.step) | Solid CAD assembly, millimetres and Z up; stylus tip at the origin. |
+| [Goldring_1042_REV_E.glb](Goldring_1042_REV_E.glb) | Coloured 3D model, metres and Y up. |
+| [Goldring_1042_REV_E.pseudo](Goldring_1042_REV_E.pseudo) | Current geometry contract plus preserved physical-behaviour specification 1.2. Its older REV D geometry audit is explicitly historical. |
+| README.md | File contents and use. |
 
-## Using the models
+Import STEP in millimetres. X points aft towards the terminals, Y is transverse,
+and Z points upwards. The nominal mounting centre is (10.2, 0, 17.3) mm and the
+two screw centres are (10.2, ±6.35, 17.3) mm. GLB maps CAD axes to (x, z, −y)
+and scales by 0.001.
 
-Download the desired file and import it at its declared scale. In the STEP model the nominal stylus tip is at `(0, 0, 0)`. X points towards the rear terminals, Y is transverse and Z points upwards. The mounting datum is `(10.2, 0, 17.3)` mm; the two mounting-hole centres are `(10.2, ±6.35, 17.3)` mm. The GLB uses the equivalent axis mapping `(x, z, -y)` and converts millimetres to metres.
-
-Use the model as a cartridge envelope and mounting reference when planning an assembly. It is a reconstruction, not factory CAD or a fully measured specimen. Outer details are partly estimated, and the visible diamond is a simplified shape. Check critical clearances against the actual cartridge before manufacturing.
-
-Read the pseudocode when defining physical behaviour for a future simulation. Measured observations, manufacturer values, assumptions and unknown parameters are distinguished. Mass distribution, damping and microscopic contact geometry are not fully identified. Its evidence references use permanent links to the supporting files, so no additional local files are required to read the specification.
-
-For force calculations, distinguish local wall friction (friction force divided by wall normal force) from effective groove drag (longitudinal drag divided by vertical tracking force). The numerical examples are conditional scenarios, not measured Goldring friction. Use the actual tonearm geometry to transfer bearing, cable and guide loads to the stylus; keep static compliance separate from frequency-dependent response.
-
-For electrical calculations, specify the velocity direction, voltage/velocity RMS or peak convention, total external capacitance and measurement port. The specification separates an ideal RLC loading response from the complete cartridge response and from phono-stage overload. Published test observations retain their individual setups; they do not calibrate your cartridge or establish a universal tracking threshold.
+The rounded exterior, D42 seam, contact panel, markings and visible underside
+have been revised using photographs. External contours, small details and the
+modelled 2.8 mm hole clearance remain estimates. Check physical clearances
+before manufacturing mating parts. CAD volume does not establish cartridge
+mass, centre of mass or inertia. The diamond is a visual proxy, not a resolved
+Gyger S contact surface. Apply the behaviour specification only within its
+stated evidence and validity limits; its REV D audit does not validate REV E.
