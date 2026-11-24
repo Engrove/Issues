@@ -1,0 +1,585 @@
+{
+  "profile": "engrove.2d.turned-nominal/1",
+  "standard": "EG-RS R01",
+  "drawingId": "EG-D-000002",
+  "articleId": "EG-A-000006",
+  "revision": 1,
+  "status": "review",
+  "pdf": "EG-D-000002-1.pdf",
+  "sourceRegistryBlob": "8af4bcaea430cffc0b3bf1185e2ea96a3fd8b61d",
+  "materialSource": "docs/decisions.md#d-072",
+  "model": {
+    "path": "assets/mechanical-parts/dimensioned-2026-11-24/R01/parts/Sparkropp_R100_R01.step",
+    "sha256": "d359f31ab90045a54646ce6fb03e7d200a4989baa700ff9f0e0a22c86d3e2abb",
+    "sourceRevision": "R01",
+    "unit": "mm",
+    "coordinates": "STEP local axes; Z is the turning axis."
+  },
+  "sheets": [
+    {
+      "template": "docs/ritningsstandard/R01/templates/A3_Landscape.svg",
+      "templateSha256": "f7741d0d16b1a628c779a1c64944087b2741561cd5739e34438b6631164291fc",
+      "language": "en",
+      "format": "A3",
+      "projection": "first-angle",
+      "scale": [
+        2,
+        1
+      ],
+      "unit": "mm",
+      "title": "Hertz pillar, R100 cup"
+    }
+  ],
+  "partsList": {
+    "scope": "detail",
+    "ownerArticleId": "EG-A-000006",
+    "bomRevision": null,
+    "coverage": "complete",
+    "rows": [
+      {
+        "position": 1,
+        "articleId": "EG-A-000006",
+        "title": "Hertz pillar with R100 cup",
+        "material": "IMACRO M",
+        "stockForm": null,
+        "quantity": 1,
+        "unit": "each",
+        "drawing": {
+          "id": "EG-D-000002",
+          "revision": 1
+        },
+        "childBomRevision": null
+      }
+    ]
+  },
+  "views": [
+    {
+      "id": "section",
+      "page": 1,
+      "kind": "axial-section",
+      "label": "Section A–A",
+      "parent": "end",
+      "cutPlane": "Y = 0 mm",
+      "viewFrom": [
+        0,
+        1,
+        0
+      ],
+      "up": [
+        1,
+        0,
+        0
+      ],
+      "scale": [
+        2,
+        1
+      ],
+      "originMm": [
+        191,
+        92
+      ]
+    },
+    {
+      "id": "end",
+      "page": 1,
+      "kind": "orthographic",
+      "viewFrom": [
+        0,
+        0,
+        1
+      ],
+      "up": [
+        1,
+        0,
+        0
+      ],
+      "scale": [
+        2,
+        1
+      ],
+      "originMm": [
+        93,
+        92
+      ]
+    }
+  ],
+  "features": {
+    "Z-0": {
+      "surface": "plane",
+      "zMm": 0
+    },
+    "Z-5": {
+      "surface": "plane",
+      "zMm": 5
+    },
+    "Z-8.5": {
+      "surface": "plane",
+      "zMm": 8.5
+    },
+    "Z-51.5": {
+      "surface": "plane",
+      "zMm": 51.5
+    },
+    "Z-55": {
+      "surface": "plane",
+      "zMm": 55
+    },
+    "Z-70": {
+      "surface": "plane",
+      "zMm": 70
+    },
+    "CYL-48-0-5": {
+      "surface": "cylinder",
+      "diameterMm": 48,
+      "zRangeMm": [
+        0,
+        5
+      ]
+    },
+    "CYL-44-5-8.5": {
+      "surface": "cylinder",
+      "diameterMm": 44,
+      "zRangeMm": [
+        5,
+        8.5
+      ]
+    },
+    "CYL-48-8.5-51.5": {
+      "surface": "cylinder",
+      "diameterMm": 48,
+      "zRangeMm": [
+        8.5,
+        51.5
+      ]
+    },
+    "CYL-44-51.5-55": {
+      "surface": "cylinder",
+      "diameterMm": 44,
+      "zRangeMm": [
+        51.5,
+        55
+      ]
+    },
+    "CYL-48-55-70": {
+      "surface": "cylinder",
+      "diameterMm": 48,
+      "zRangeMm": [
+        55,
+        70
+      ]
+    },
+    "CUP": {
+      "surface": "sphere",
+      "radiusMm": 100,
+      "axis": "Z"
+    },
+    "MOUTH": {
+      "curve": "circle",
+      "zMm": 70,
+      "diameterMm": 44
+    },
+    "CUP-CENTRE": {
+      "geometry": "intersection",
+      "of": [
+        "CUP",
+        "Z-axis"
+      ],
+      "zMm": 67.54998718605
+    },
+    "Z-axis": {
+      "geometry": "axis",
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "originMm": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "dimensions": [
+    {
+      "id": "D01",
+      "nominal": "48",
+      "kind": "diameter",
+      "unit": "mm",
+      "feature": "Outside cylinder",
+      "tolerance": null,
+      "page": 1,
+      "featureIds": [
+        "CYL-48-0-5",
+        "CYL-48-8.5-51.5",
+        "CYL-48-55-70"
+      ],
+      "role": "nominal",
+      "viewId": "section",
+      "display": "Ø48",
+      "bboxPt": [
+        477.218,
+        250.576,
+        488.757,
+        271.004
+      ]
+    },
+    {
+      "id": "D02",
+      "nominal": "70",
+      "kind": "axial length",
+      "unit": "mm",
+      "feature": "Body",
+      "tolerance": null,
+      "page": 1,
+      "featureIds": [
+        "Z-0",
+        "Z-70"
+      ],
+      "role": "nominal",
+      "viewId": "section",
+      "display": "70",
+      "bboxPt": [
+        733.53,
+        454.825,
+        746.15,
+        466.363
+      ]
+    },
+    {
+      "id": "D03",
+      "nominal": "5",
+      "kind": "axial length",
+      "unit": "mm",
+      "feature": "Left land",
+      "tolerance": null,
+      "page": 1,
+      "featureIds": [
+        "Z-0",
+        "Z-5"
+      ],
+      "role": "nominal",
+      "viewId": "section",
+      "display": "5",
+      "bboxPt": [
+        552.434,
+        417.974,
+        558.744,
+        429.513
+      ]
+    },
+    {
+      "id": "D04",
+      "nominal": "43",
+      "kind": "axial length",
+      "unit": "mm",
+      "feature": "Middle land",
+      "tolerance": null,
+      "page": 1,
+      "featureIds": [
+        "Z-8.5",
+        "Z-51.5"
+      ],
+      "role": "nominal",
+      "viewId": "section",
+      "display": "43",
+      "bboxPt": [
+        705.184,
+        417.974,
+        717.804,
+        429.513
+      ]
+    },
+    {
+      "id": "D05",
+      "nominal": "15",
+      "kind": "axial length",
+      "unit": "mm",
+      "feature": "Right land",
+      "tolerance": null,
+      "page": 1,
+      "featureIds": [
+        "Z-55",
+        "Z-70"
+      ],
+      "role": "reference",
+      "viewId": "section",
+      "display": "(15)",
+      "bboxPt": [
+        379.843,
+        673.943,
+        400.201,
+        685.481
+      ]
+    },
+    {
+      "id": "D06",
+      "nominal": "3.5",
+      "kind": "width",
+      "unit": "mm",
+      "feature": "Left groove",
+      "tolerance": null,
+      "page": 1,
+      "featureIds": [
+        "Z-5",
+        "Z-8.5"
+      ],
+      "role": "nominal",
+      "viewId": "section",
+      "display": "3.5",
+      "bboxPt": [
+        571.796,
+        80.651,
+        587.571,
+        92.19
+      ]
+    },
+    {
+      "id": "D07",
+      "nominal": "3.5",
+      "kind": "width",
+      "unit": "mm",
+      "feature": "Right groove",
+      "tolerance": null,
+      "page": 1,
+      "featureIds": [
+        "Z-51.5",
+        "Z-55"
+      ],
+      "role": "nominal",
+      "viewId": "section",
+      "display": "3.5",
+      "bboxPt": [
+        835.418,
+        80.651,
+        851.193,
+        92.19
+      ]
+    },
+    {
+      "id": "D08",
+      "nominal": "44",
+      "kind": "diameter",
+      "unit": "mm",
+      "feature": "Both groove floors",
+      "tolerance": null,
+      "page": 1,
+      "featureIds": [
+        "CYL-44-5-8.5",
+        "CYL-44-51.5-55"
+      ],
+      "role": "nominal",
+      "viewId": "section",
+      "display": "2 × Ø44",
+      "bboxPt": [
+        221.108,
+        710.793,
+        262.47,
+        722.332
+      ]
+    },
+    {
+      "id": "D09",
+      "nominal": "100",
+      "kind": "axial profile radius",
+      "unit": "mm",
+      "feature": "Cup profile",
+      "tolerance": null,
+      "page": 1,
+      "featureIds": [
+        "CUP"
+      ],
+      "role": "nominal",
+      "viewId": "section",
+      "display": "R100",
+      "bboxPt": [
+        1011.969,
+        179.036,
+        1037.794,
+        190.574
+      ]
+    },
+    {
+      "id": "D10",
+      "nominal": "44",
+      "kind": "diameter",
+      "unit": "mm",
+      "feature": "Cup aperture",
+      "tolerance": null,
+      "page": 1,
+      "featureIds": [
+        "MOUTH"
+      ],
+      "role": "nominal",
+      "viewId": "end",
+      "display": "Ø44",
+      "bboxPt": [
+        85.039,
+        96.809,
+        105.467,
+        108.347
+      ]
+    },
+    {
+      "id": "D11",
+      "nominal": "2",
+      "kind": "radial width",
+      "unit": "mm",
+      "feature": "Face annulus",
+      "tolerance": null,
+      "page": 1,
+      "featureIds": [
+        "CYL-48-55-70",
+        "MOUTH"
+      ],
+      "role": "reference",
+      "viewId": "end",
+      "display": "(2)",
+      "bboxPt": [
+        221.118,
+        736.305,
+        235.166,
+        747.843
+      ]
+    },
+    {
+      "id": "D12",
+      "nominal": "2.45",
+      "kind": "depth",
+      "unit": "mm",
+      "feature": "Cup centre",
+      "tolerance": null,
+      "page": 1,
+      "featureIds": [
+        "Z-70",
+        "CUP-CENTRE"
+      ],
+      "role": "reference",
+      "viewId": "section",
+      "display": "(2.45)",
+      "bboxPt": [
+        1006.299,
+        312.525,
+        1036.122,
+        324.064
+      ]
+    },
+    {
+      "id": "D13",
+      "feature": "Station Z5 to cup end",
+      "nominal": "65",
+      "kind": "distance",
+      "unit": "mm",
+      "page": 1,
+      "tolerance": null,
+      "featureIds": [
+        "Z-5",
+        "Z-70"
+      ],
+      "role": "reference",
+      "viewId": "section",
+      "display": "(65)",
+      "bboxPt": [
+        170.077,
+        648.431,
+        190.436,
+        659.969
+      ]
+    },
+    {
+      "id": "D14",
+      "feature": "Station Z8.5 to cup end",
+      "nominal": "61.5",
+      "kind": "distance",
+      "unit": "mm",
+      "page": 1,
+      "tolerance": null,
+      "featureIds": [
+        "Z-8.5",
+        "Z-70"
+      ],
+      "role": "reference",
+      "viewId": "section",
+      "display": "(61.5)",
+      "bboxPt": [
+        379.843,
+        648.431,
+        409.666,
+        659.969
+      ]
+    },
+    {
+      "id": "D15",
+      "feature": "Station Z51.5 to cup end",
+      "nominal": "18.5",
+      "kind": "distance",
+      "unit": "mm",
+      "page": 1,
+      "tolerance": null,
+      "featureIds": [
+        "Z-51.5",
+        "Z-70"
+      ],
+      "role": "reference",
+      "viewId": "section",
+      "display": "(18.5)",
+      "bboxPt": [
+        170.077,
+        673.943,
+        199.901,
+        685.481
+      ]
+    },
+    {
+      "id": "D16",
+      "feature": "Both grooves relative to outside lands",
+      "nominal": "2",
+      "kind": "radial depth",
+      "unit": "mm",
+      "page": 1,
+      "tolerance": null,
+      "featureIds": [
+        "CYL-48-0-5",
+        "CYL-48-8.5-51.5",
+        "CYL-48-55-70",
+        "CYL-44-5-8.5",
+        "CYL-44-51.5-55"
+      ],
+      "role": "reference",
+      "viewId": "section",
+      "display": "(2)",
+      "bboxPt": [
+        498.915,
+        710.793,
+        512.963,
+        722.332
+      ]
+    }
+  ],
+  "partsTables": [
+    {
+      "page": 1,
+      "xMm": [
+        27,
+        43,
+        85,
+        163,
+        211,
+        255,
+        312,
+        330,
+        360,
+        403
+      ],
+      "yMm": [
+        184,
+        192,
+        202
+      ],
+      "positions": [
+        1
+      ]
+    }
+  ],
+  "sha256": "e4cf8ae2b4b31271a8a3c44cb2c04af51fdb044eadab68de45af5dcc92da4bf2"
+}

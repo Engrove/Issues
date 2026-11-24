@@ -1,0 +1,20 @@
+{
+  "format": "engrove.public-drawings/1",
+  "drawings": [
+    {
+      "articleId": "EG-A-000006",
+      "drawingId": "EG-D-000002",
+      "revision": 1,
+      "title": "Hertz pillar, R100 cup",
+      "status": "accepted",
+      "scope": "public-reference",
+      "acceptedBy": "Engrove",
+      "acceptedOn": "2026-11-24",
+      "issuedStatus": "review",
+      "files": {
+        "Hertz_Pillar/drawings/EG-D-000002-1.pdf": "e4cf8ae2b4b31271a8a3c44cb2c04af51fdb044eadab68de45af5dcc92da4bf2",
+        "Hertz_Pillar/drawings/EG-D-000002-1.json": "c50c8449cfa0e9dc525cd84fa78cd43770286e9d6aa7380abdabc8c4b322e081"
+      }
+    }
+  ]
+}
