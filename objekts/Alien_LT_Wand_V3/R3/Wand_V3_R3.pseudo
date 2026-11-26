@@ -1,0 +1,40 @@
+Alien LT Wand V3 R3 · geometry and assembly notes
+Units: millimetres, grams and gram-force. Right-handed axes: X aft from
+the stylus, Y across the wand, Z up from the record surface (Z = 0).
+
+1. Construct the symmetric shell from transverse freeform sections. Retain
+   the front crown and the level pickup mounting face at Z = 18.20 through
+   X = 37. Use a 24 mm fifth-degree Bezier run-out toward the underside.
+   The six Bezier control points have equally spaced X coordinates from
+   37 to 61. For the exterior, their Z values are [h,h,h,k-2*p*m,k-p*m,k],
+   where h=18.2, p=24/5, m=-0.01223 and k=10.048+(61-100)*m-0.035.
+2. Crown the lower length between X = 54 and 190. At the middle of a
+   station, lower the original sole by 2.4*[4*t*(1-t)]^3, t=(X-54)/136.
+   Fade the adjustment toward the sides and roof. Split the shell on Y=0.
+3. Blend the aft transverse sections to a 38 mm wide shell with nominal
+   lower/upper corner controls of 5.8/4.2. The aft sole reaches Z=-15.20
+   at X=274. The roof levels off at X=298. The tail is semicircular in
+   plan about X=286. Finish the side silhouette at X=304.992 with top
+   and bottom quarter-round profiles of nominal radii 3.2 and 3.6.
+4. Cut the transverse bearing crown, diameter 14.20, about X=237.10,
+   Z=+1.50. Blend the front mouth lip to the crown with R4.0. Blend the
+   rear lip to the straight lead-in with R4.5. The opening accepts the
+   14 mm OD housing from below. The neutral magnet contact lies at Z=0.
+   Fit the 34 mm long 14/12 housing, 36 mm long 12/11 insert and two
+   lower 4 x 10 magnets centred at Y=+/-10, Z=-2.
+5. Fit and bond the vertical 30/28 fixed sleeve at X=286. Its ends follow
+   the original shell surface. The two 30 mm diameter mould marks have a
+   centre depth of 0.50. File to the actual tube; the CAD bore is 30.20.
+   The local upper and lower carbon doublers are bounded by a 4.30 mm
+   depth from the local roof and sole reference planes. Fit the two cup
+   guides, the internal lock boss, its screw and pressure shoe. The
+   service hole opens aft.
+6. Assemble the moving cup from 48 mm long 25/23 tube, floor, two crossing
+   webs, gasket, lid and lid screw. In the model, 67.89 g of fill gives
+   1.75 gf at the stylus with moving centre of mass 0.50 below the record
+   plane after vertical adjustment. Set the actual fill by weighing and
+   balancing the finished arm.
+7. Bond two 46 mm long 10/8 external trim tubes in the nominal 72 degree
+   side grooves after demoulding. Moving both nominal 6 g trim masses by
+   9.88 mm gives 0.50 gf of fine adjustment. Trial-fit the bearing and
+   check the joints, laminate, trim travel and assembled arm sweep.
