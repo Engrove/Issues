@@ -6,6 +6,10 @@ Dimensions are in millimetres. X increases from the stylus toward the counterwei
 
 `Wand_V3_R3.pseudo` describes the profiles, datums, interfaces and assembly sequence. The STEP file defines the freeform surfaces. This is a design study. Fit, adhesive joints and laminate strength require hardware tests.
 
+## Mounted 2 kHz study
+
+The [mounted finite-element study](https://lab.engroveaudio.com/revisions/tonearm-wand/v3-r3/fe/2khz/) compares this R3 reference with the [K2 Graded 1 prototype CAD](../studies/K2_Graded_1/). The tracked torsional mode of K2 is at 2,188 Hz in the model. Lower modes at 904 and 1,053 Hz still rotate the pickup relative to its bearing. The report explains the design targets and shows the deformation of the arm, laminate shear and load in the WEST SYSTEM 105/205 bonds.
+
 ## R3 bonded assembly and WEST SYSTEM 105/205
 
 A new analysis follows the assembled load path from the Goldring 1042 to both vertical bearing contacts. It includes elastic shells and fittings, finite-stiffness joints with WEST SYSTEM 105/205 and separate models for the adjustable insert and capsule clamp.
