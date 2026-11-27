@@ -1,0 +1,84 @@
+ENGROVE AUDIO LAB | ALIEN LT | K2 GRADED 1 PLY KIT
+Engineering construction study. Units are mm. One mirror pair of mouldings.
+Read with Wand_K2_Graded_1_Ply_Kit.step (AP242 tessellated named solids).
+
+DATUM    Stylus at (0,0,0), +X rearwards, +Z up. W01 is the negative-Y
+         half (L-) and W02 the positive-Y half (R-). Traverse each half
+         from the centre of the sole towards its flank and the roof seam.
+         s is this 3D meridian's accumulated length. e=s/half-perimeter.
+         Both planar end returns close on Y=0. The two halves butt at Y=0.
+
+TOOL     Use the R3 Cobra exterior including the pitch saddle at X237.10,
+         Z1.50, axis Y, and the side gauge seats Ø10.16. The frozen K2
+         assembly keeps this exterior, front pickup slots and two lead exits.
+         K2 assembly SHA-256 (unpacked STEP):
+         c30f1f7f300cff19718ec62b6f85071cd351ca0c313e7bb395bbae2e94e77ad6
+
+TEXTILE  B = opened CF-BR-40 braid, paired target directions +45° and −45°.
+         U = CF-TP-RB-80-15-10 axial UD, stock width 15. Matrix is WEST SYSTEM
+         105/205. Nominal fibre volume fraction 0.50. B is 0.364045 cured,
+         U is 0.087912 cured. Check actual angle and cured gauge on the tool.
+         Axial is +X projected into each true tangent plane, with the wrap
+         continuing onto its planar ends. Positive angle turns from the axial
+         direction towards the outward normal cross axial. Reflection swaps
+         +45 and −45. Cut the two mirror halves with their own handed marks.
+
+PLACE    Work from tool / outside inwards. Place only the following whole
+         material pieces in order: UF, B0, BO, U0, UR, B1F or B1A, BI.
+         UF = front replacement axial, B0 = continuous outer base braid,
+         BO = aft outer braid, U0 = axial base, UR = aft axial, B1F / B1A
+         = inner base braid before / after front replacement, BI = aft inner
+         braid. Individual 15-wide U0 courses have s boundaries 0,15,30,...
+         UF and UR begin with 7.5, then 22.5,37.5,...; trim outermost course
+         to the roof seam. Braid panels are opened. Use close-fitting butt
+         edges for the nominal study. Dry cut maps can join pieces separated
+         only by a subsequent hole. Inspect the separate 1:1 dry templates.
+
+GRADING  Divide each meridian into four consecutive quarter-perimeter bands.
+         Each band has a fixed phase q. From sole to roof:
+            UF / BO :  1/8  3/8  5/8  7/8
+            UR      :  3/8  5/8  7/8  1/8
+            BI      :  5/8  7/8  1/8  3/8
+         Place UF from X=27+15q to 158−21q. Outside UF, retain B1F or B1A.
+         Place BO, UR and BI from X=170+25q to 295−17q, only at
+         hypot(X−286,Y) ≥ 20+7q. Preserve the baseline near the capsule.
+         Leave the material as full plies with staggered edges in the tool.
+         Full fields from tool into cavity:
+            nose/base:     B0 / U0 / B1               0.816002
+            light front:   UF / B0 / U0               0.539869
+            eligible aft:  B0 / BO / U0 / UR / B1 / BI 1.632004
+         The selectable engineering STEP shows a short modelled edge drop
+         over 0.85 mm developed distance. A resin/compaction model uses
+         local tool directions near corners, contact gauges and tip returns.
+         Each 15-mm axial course retains its full nominal gauge at butt seams.
+
+OPENINGS Machine after cure:
+         • Pickup slots in the sole. Two stadiums 8.80 × 2.80 in X,Y with
+           arc centres (7.20, ±6.35) and (13.20, ±6.35), end radius 1.40.
+         • Round-ended X1.50 × Y2.80 lead exits at (40,0) and (226.8,0).
+           In the sole near X40, retain base B1F instead of UF within 2+12q
+           of the opening edge. Near X226.8 omit extra BO, UR, BI within
+           respectively 2, 8 and 14 of the opening edge. Base plies remain.
+         • Capsule opening Ø30.20, axis Z at (286,0). Preserve the ring land.
+         • Rear lock access Ø3.40, axis X at (Y0,Z−5). The facet envelope
+           has 0.0025 radial allowance at this last directly gauged opening.
+         Gauge the Ø14.20 saddle and both side seats. Keep screws, slots,
+         wire entries and the clockable insert free. The two K2 doublers,
+         metal components and local bond films are separate items
+         in the study assembly. They are outside the shell-ply kit.
+
+DELIVERY Each receiving CAD product is one named closed tessellated solid.
+         Nominal prepreg/laminate gauges and formed intersections are distinct.
+         The opened neutral file carries net, trimmed study geometry. Use
+         its source register and the full-size cut patterns for fabrication.
+         Check end returns, relief, physical fibre angles and fits on dry
+         trial material before committing resin. Local compaction, adhesive
+         bedding and finishing are not constitutive results of this study.
+
+CHECK    The outer mould and both true, planar end curves are referenced to
+         the native K2/R3 CAD. Adjacent offset interfaces agree within
+         0.000211 mm at matched vertices. Whole closed-facet checks found
+         at most 0.00677 mm on the smaller side of a local facet crossing.
+         Near-tangent projected face excursions are reported separately in
+         the intersection audit. Form the ends on the tool and trim to the
+         real joint, bore and half-seam gauges. Reference CAD is in mm.
