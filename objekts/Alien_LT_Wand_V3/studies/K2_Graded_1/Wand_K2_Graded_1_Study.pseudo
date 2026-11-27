@@ -1,0 +1,115 @@
+ENGROVE AUDIO LAB | ALIEN LT WAND | K2 GRADED 1
+Independent engineering study based on Accepted Wand V3 R3.
+Assembly STEP: Wand_K2_Graded_1_Study.step   Units: mm, g, gf, mL.
+STEP SHA-256: c30f1f7f300cff19718ec62b6f85071cd351ca0c313e7bb395bbae2e94e77ad6
+Pose record: h145-K2grade1-clear-setup.json   SHA-256: 9c878a7212ab05c8eeefccf05f7e6af4ec9f62d27c09c374380937a12aa17487
+
+01  FRAME AND PRIMARY SHAPE
+    Stylus tip neutral = (0,0,0). X aft, +Z up, Y transverse. Positive-Y
+    skin is W02, negative-Y W01. Vertical pitch datum: (237.10,0,0).
+    Neutral shaft/bore axis: X237.10, Z1.50, parallel to Y. The K2 outer
+    mould is the original R3 Cobra shape, from X -8.00 to about +304.99.
+    Use the exchange assembly for solid surface geometry and exact hardware
+    positions. Machine the nominal reference skin at the front and both wire
+    ports. Keep separate Ti, films, cage, nuts, hardware and removable cup.
+    The exchange shell has the reference wall and real machined surfaces.
+    The cured wall around the fixed outer mould follows the schedule below.
+
+02  TEXTILES, EPOXY AND CLOSED-SECTION LAYUP
+    B = one CF-BR-40 braided ply, opened/cut as required to hold the local
+        paired +45/-45 degree fibre directions relative to the X centreline.
+    U = full-coverage axial ply from adjacent 15 mm strips of CF-TP-RB-80-15-10.
+        Centre each course on the local 0-degree axis and stagger joints.
+    Matrix WEST SYSTEM 105 / 205. Nominal Vf 0.50. Confirm cured thickness
+    and actual angle on a coupon and in the tool. Reported dimensions assume
+    this fibre fraction. Measure the formed angle against a local template.
+    Stack order below runs INNER to OUTER, symmetric in every full zone.
+      Baseline A:      B / U / B                      0.8160 mm
+      Light front:    U / B / U                      0.5399 mm
+      Aft thick zone: B / B / U / U / B / B          1.6320 mm
+    Transition from A to the two local stacks at these X stations.
+      X27..42   ramp A toward light front over 15 mm, X42..137 full.
+      X137..158 ramp light front back to A over 21 mm.
+      X170..195 ramp A toward aft stack over 25 mm, X195..278 full
+               on eligible skin. X278..295 return to A over 17 mm.
+    Longitudinal ramps represent staggered patch edges around the perimeter
+    at 0, 1/4, 1/2, 3/4 and full coverage. Arrange whole textile pieces.
+    Preserve the outer shape,
+    trim each half to Y=0, then bond the matched halves. Do not fill shafts,
+    nut slots, clamping split or wire passages with resin. Preserve the
+    exact inner cage and contact lands. On both sides of the rear sleeve,
+    retain base stack A and multiply only the extra aft plies by the
+    radial taper: 0 at r≤20, (r−20)/7 at 20<r<27, 1 at r≥27, with
+    r=sqrt((X−286)^2+Y^2). Apply this to the longitudinal patch coverage.
+    Recut the gauge diameters at Ø30.20 sleeve bore, Ø14.20 pitch
+    saddle and Ø10.16 side-trim seats. This prescription excludes bonded
+    darts or local fillets from the dry numerical geometry.
+
+    Use staggered, close-fitting panel edges for the nominal mass. Purchased
+    cutting scrap stays off the arm. Optional laps measured on the CAD mould
+    add cured mass: 1 mm edge lap of 15 mm UD courses, +0.358 g. A 5 mm
+    interrupted hoop lap adds +0.676 g per one braid layer across the four
+    longitudinal transition bands or +0.165 g per one equivalent UD layer.
+    In combination these details add about 1.199 g, with an independently
+    calculated +2.578 g counterfill correction before any actual reweigh.
+
+03  FRONT INTERFACE AND REAL LEAD PASSAGES
+    Titanium mount plate 0.80, Z17.30..18.10, and a separate film to Z18.20.
+    In both shell floors cut a capsule-shaped 8.80 × 2.80 longitudinal slot.
+    The arc centres are X7.20 and 13.20 at Y±6.35, end radii 1.40. Retain
+    the original slot shape of the Ti plate. Full screw travel: ±3.00 mm.
+    Cage feet at Z19.10, Z19.05 skin lands, 0.050-mm adhesive only on the
+    matching flat footprints (18.185 mm² per side). Cage and M2.5 sliding
+    nut are captive. Keep the nut free of adhesive. Washer Ø4.20/2.80 × 0.15 between
+    REV G flange and screw head. Top of washer Z14.45. Screw Ø2.50 × 7.00
+    under head, head Ø3.60 × 1.00. STEP uses nominal thread envelopes.
+    Full neutral nut engagement 2.00, tip-to-cage-roof clearance 0.30.
+    At X40.0 and X226.8, Y=0, machine a round-ended through-slot into each
+    local sole from below, width in X 1.50, length in Y 2.80. Edge-finish
+    and insulate. Mask extra plies within 2 mm and stagger over 14 mm.
+    The four Ø0.32 C03 leads have ≥0.4227 mm dry wire/skin clearance.
+
+04  OPENABLE PITCH BEARING
+    Machine one integral P01 in 7075-T6 with Ø14 middle barrel from Y -19..+19.
+    At each end form Ø18 collars |Y|19..24. Line bore Ø12.04 continuously.
+    Cut a 0.80-wide split to |Y|24, rounding its inner end at |Y|18.50.
+    Clamp bolt axes parallel to X at Y±21.50, Z10.80. Smooth near hole Ø2.70,
+    M2.5 opposite ear, bearing spotface Ø4.80 under each head. Use steel M2.5
+    screws, 8.00 under head, Ø4.50 × 2.40 head, hex 2.00 A/F. Each screw
+    has 3.40 mm effective tapped engagement. Install bare housing upwards
+    through the saddle before bringing the assembly to the stationary carrier.
+    Restrict the 0.10-mm radial adhesive bond to |Y|≤17. Fit clockable 7075
+    P02, Ø12.00/11.00 × 49.00. Centre, rotate, then tighten both clamps.
+    Nominal released radial gap 0.020. Maximum available bearing area at
+    either end 185.121 mm². Pressure distribution and torque need measurement.
+    K2 uses R3 magnetic poles and carrier. P05/P06/P07 are fixed references.
+    Net P01 8.42961 g, P02 2.48725 g, each steel screw 0.57255 g.
+
+05  BALANCED ASSEMBLY POSE
+    Left/right trim axial travel shown relative to their R3 neutral station:
+    +0.00000 mm. Cup lift: +1.42729 mm relative to R3.
+    Cup centre X286. Nominal internal bore Ø23.00, four chambers with
+    webs and floor. Physical filled height 27.393349 mm above the inner floor.
+    Modelled mixture mass 51.848069 g, nominal volume 10.390929 mL,
+    reopened four-chamber envelope 10.390929 mL. Use Ø1.00 steel shot
+    and oil. For a dry packed density of 4.6 g/mL (solid steel
+    7.8 g/mL, oil 0.95 g/mL), weigh 47.79827 g dry shot and add
+    4.26295 mL oil to the pores. Four bulk solids represent the co-moving mixture.
+    Rebalance by weighing
+    the packed shot and oil, moving the trim/cup and checking a stylus gauge.
+    Simulated tracking force 1.750000 gf and moving system mass 152.93661 g
+    for this case. Cartridge assembly is the complete Goldring 1042 REV G.
+
+06  RELATION TO FINITE-ELEMENT GEOMETRY
+    Flexible reference skin contains the two pickup slots. Its effective material
+    cards reference a uniform 0.8-mm integration thickness. The original front
+    and saddle lands measure 0.850 mm at the centre. It does not explicitly mesh
+    every local cured thickness, staggered drop, detailed thread or the two
+    post-cure wire passages (6.2094 mm³ removed in the exported article).
+    The final solved case includes the 20–27 mm sleeve keep-out in the
+    material distribution. Actual lap mass, local resin and fabrication
+    tolerances should be measured before the final tracking adjustment.
+    The finite clamp uses a partial-contact tangent law. The STEP represents
+    dry machining dimensions without preload deformation. Cueing and dust-cover
+    clearance, laminate coupons, clamp retention and vibration acceptance
+    require the built article. R3 remains the accepted design.
