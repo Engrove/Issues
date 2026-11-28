@@ -1,0 +1,22 @@
+FLOW YOKE R3 — interpretation of the supplied STEP solids
+
+INPUT  guide = A or B; manufacturing state = stock or finished
+FRAME  origin on P2, X towards the rod, Z upwards; units are millimetres
+
+SELECT the yoke for the matching guide.
+KEEP the two feet, central pivot seat and rod axis in their guide-specific positions.
+FORM a continuous arch between the feet.
+EXTEND the magnet arm from a broad, shallow shoulder following the arch.
+NARROW the arm towards the split rod boss and blend both ends.
+ADD two local ears for the transverse clamp screw.
+
+IF state = stock:
+    retain machining pads on the mating faces
+    keep the clamp and the centre of the pivot seat solid
+    use a pilot through the rod boss
+ELSE IF state = finished:
+    use the nominal mating faces, seat recess and rod bore
+    separate the ears with a slot opening into the bore
+    provide clearance in the head-side ear and a tap pilot in the opposite ear
+
+RETURN one solid. The matching finished STEP supplies the exact surface geometry.
