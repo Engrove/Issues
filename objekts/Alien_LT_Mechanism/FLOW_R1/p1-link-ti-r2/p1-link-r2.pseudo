@@ -20,3 +20,11 @@ One stationary spindle, radius/Z range: 4.5/[14,22], 6/[22,22.5],
 Stock adds 0.30 radially in machined bores and 0.25 axially on bearing
 shoulders and local facing lands. The Ø17 internal clearance stays as modelled.
 Bearing fits, axial capture and free rotation require verification on the hardware.
+
+P1 bearing reference (one reusable set, two installed occurrences):
+  Local origin at bearing centre; axis +Z; nominal width 5.
+  Inner ring: radius 5 to 6.55; outer ring: radius 7.95 to 9.5.
+  Round circular edges R0.16; cut race grooves with a torus R7.25 / r1.21.
+  Place ten Ø2.381 balls on radius 7.25, equally spaced at 36 degrees.
+  Install both sets at (0,0,25) and (0,0,50). Omit cage from reference model.
+  Internal dimensions illustrate the bearing. Confirm the actual item separately.
