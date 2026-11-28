@@ -1,0 +1,22 @@
+P1–P2 titanium link / FLOW / R2
+Units mm. Right-handed; Z up; P1=(0,0); P2=(L,0).
+L=42.30346 for A, 37 for B. The horizontal top is Z52.5.
+R1=11.25; R2=6.8. At levels (Z, waist half-width)
+(22.5,2.85),(29,3),(36,4),(42,4.4),(48,3.85),(52.5,2.8):
+  On the positive side use two cubic Beziers with (X/L,Y) poles:
+  (0,R1),(.18,R1),(.32,w),(.51,w); (.51,w),(.69,w),(.85,R2),(1,R2).
+  Mirror about Y=0. Close each end with its outside semicircle.
+  Loft corresponding flanks; cap top and bottom; keep semicircular bosses cylindrical.
+Trim underside using a constant-Y extrusion of an XZ curve. Up to X10 keep
+Z22.5. Set x2=L-6.8; xm=10+.65*(x2-10). Join (10,22.5) to (xm,32.5),
+then (xm,32.5) to (x2,28), by cubic Beziers with horizontal end tangents;
+each inner pole is 38% of its segment's X span from the adjacent endpoint.
+Beyond x2 keep Z28. Blend both external rims R0.75 before cutting bores.
+P1 coaxial bores: Ø17 through, Ø19 × 5 from each end.
+P2: Ø9 through. Bearing envelopes at P1: Ø10 ID, Ø19 OD, B5;
+lower bearing Z22.5–27.5 and upper bearing Z47.5–52.5.
+One stationary spindle, radius/Z range: 4.5/[14,22], 6/[22,22.5],
+5/[22.5,58], 4.5/[58,61.7]. Historic upper/lower pilots omitted.
+Stock adds 0.30 radially in machined bores and 0.25 axially on bearing
+shoulders and local facing lands. The Ø17 internal clearance stays as modelled.
+Bearing fits, axial capture and free rotation require verification on the hardware.
